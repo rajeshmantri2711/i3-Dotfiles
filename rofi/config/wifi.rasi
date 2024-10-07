@@ -1,0 +1,36 @@
+* {
+    /* Leave font out to use system's default font */
+
+    /* Background and text color */
+    background: #282828;
+    foreground: #ebdbb2;
+
+    /* Window width, height, and padding */
+    width: 600px;
+    padding: 10px;
+    border: 1px solid #83a598;
+}
+
+#window {
+    width: 50%;
+    height: 400px;
+    border-radius: 5px;
+}
+
+listview {
+    spacing: 2px;
+    fixed-height: 20;
+}
+
+#element {
+    background: #3c3836;
+    foreground: #d5c4a1;
+    border: 1px solid #83a598;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+#element selected {
+    background: #458588;
+    foreground: #fbf1c7;
+}
