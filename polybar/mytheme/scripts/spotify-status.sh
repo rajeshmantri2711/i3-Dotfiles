@@ -4,7 +4,7 @@
 playerctlstatus=$(playerctl -p spotify status 2> /dev/null)
 
 if [[ -z $playerctlstatus ]]; then
-    echo "󰝚"  # Not playing
+    echo "Choices Have Consequences"  # Not playing
 elif [[ $playerctlstatus == "Playing" ]]; then
     # Get the artist and title of the currently playing track
     ARTIST=$(playerctl -p spotify metadata artist 2> /dev/null)
