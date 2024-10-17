@@ -73,4 +73,9 @@ mv polybar ~/.config/
 mv rofi ~/.config/
 mv picom ~/.config/
 
+
+sudo apt install zsh
+mv .zsh ~/
+mv .zshrc ~/
+
 echo "All dependencies installed and config files set up!"
