@@ -11,6 +11,8 @@ sudo apt install notify-osd
 sudo apt install playerctl
 sudo apt install nitrogen
 sudo apt install kitty
+sudo apt-get install python3-pip git
+pip3 install i3ipc
 # Install dependencies for Polybar
 echo "Installing dependencies for Polybar..."
 sudo apt install -y libiw-dev
