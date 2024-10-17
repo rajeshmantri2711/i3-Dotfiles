@@ -35,7 +35,8 @@ sudo apt install -y libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev l
 sudo apt install -y build-essential git meson ninja-build libxcb1-dev libxcb-util0-dev libxcb-randr0-dev \
 libxcb-keysyms1-dev libxcb-xinerama0-dev libxcb-xfixes0-dev libxrender-dev libxext-dev \
 libgl1-mesa-dev libgdk-pixbuf2.0-dev libpcre2-dev libconfig++-dev
-
+sudo apt install picom
+sudo apt install rofi
 # Set up .xinitrc
 echo "Setting up .xinitrc..."
 echo "#!/bin/sh" > ~/.xinitrc
