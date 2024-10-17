@@ -1,3 +1,5 @@
 install 
 playerctl for spotify
+sudo apt update
+sudo apt install notify-osd for notification
 and more
