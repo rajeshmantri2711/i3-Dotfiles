@@ -11,6 +11,9 @@ sudo apt install notify-osd
 sudo apt install playerctl
 sudo apt install nitrogen
 sudo apt install kitty
+git clone https://github.com/kovidgoyal/kitty.git
+cd kitty
+
 sudo apt-get install python3-pip git
 pip3 install i3ipc
 # Install dependencies for Polybar
