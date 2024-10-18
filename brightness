@@ -1,0 +1,6 @@
+for bright ness use light 
+and make changes
+sudo chmod 666 /sys/class/backlight/intel_backlight/brightness
+sudo chmod 666 /sys/class/backlight/intel_backlight/max_brightness
+sudo nano /etc/udev/rules.d/99-backlight.rules
+sudo udevadm control --reload-rules
