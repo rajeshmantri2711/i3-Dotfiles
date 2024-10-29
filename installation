@@ -2,4 +2,5 @@ install
 playerctl for spotify
 sudo apt update
 sudo apt install notify-osd for notification
+sudo apt install light for brighness control also add user to the video group
 and more
