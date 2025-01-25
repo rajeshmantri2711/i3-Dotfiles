@@ -6,5 +6,4 @@ sudo apt install light for brighness control also add user to the video group
 install green clip wget https://github.com/erebe/greenclip/releases/latest/download/greenclip
 and chmod +x greenclip
 sudo mv greenclip /usr/local/bin/
-and more
-
+sudo apt install maim for screenshots
