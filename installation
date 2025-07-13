@@ -17,6 +17,8 @@ xrandr --output Virtual-1 --mode 1920x1080
 nemo for filr manger
 
 
+i am done with this below rest tmrw 10:39-r
+
 currently doing this for i3 
 # Step 1: Remove existing i3 to avoid conflicts
 sudo apt remove --purge i3 -y
