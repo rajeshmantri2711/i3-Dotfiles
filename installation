@@ -7,3 +7,38 @@ install green clip wget https://github.com/erebe/greenclip/releases/latest/downl
 and chmod +x greenclip
 sudo mv greenclip /usr/local/bin/
 sudo apt install maim for screenshots
+
+insatll cinnamon for settings and stuff
+
+
+xrandr --output Virtual-1 --mode 1920x1080
+ for the resolution
+
+nemo for filr manger
+
+
+currently doing this for i3 
+# Step 1: Remove existing i3 to avoid conflicts
+sudo apt remove --purge i3 -y
+
+# Step 2: Install required build dependencies
+sudo apt install -y \
+  meson ninja-build build-essential pkg-config \
+  libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev \
+  libxcb-util0-dev libxcb-icccm4-dev libyajl-dev \
+  libev-dev libxcb-xkb-dev libxcb-cursor-dev \
+  libxkbcommon-dev libxcb-xinerama0-dev \
+  libxkbcommon-x11-dev libstartup-notification0-dev \
+  libxcb-randr0-dev libxcb-shape0-dev libxcb-xrm-dev \
+  libxcb-xrm0 libxcb-render-util0-dev xutils-dev \
+  libxcb-shm0-dev libxcb-dpms0-dev libxcb-present-dev
+
+# Step 3: Clone the latest i3 repo (tag 4.24)
+git clone https://github.com/i3/i3.git
+cd i3
+git checkout 4.24
+
+# Step 4: Build and install
+meson build
+ninja -C build
+sudo ninja -C build install
