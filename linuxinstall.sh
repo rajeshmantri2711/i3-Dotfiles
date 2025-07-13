@@ -30,13 +30,40 @@ fi
 
 echo "📦 Detected OS family: $OS"
 
+#for i3
+# Step 1: Remove existing i3 to avoid conflicts
+sudo apt remove --purge i3 -y
+
+# Step 2: Install required build dependencies
+sudo apt install -y \
+  meson ninja-build build-essential pkg-config \
+  libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev \
+  libxcb-util0-dev libxcb-icccm4-dev libyajl-dev \
+  libev-dev libxcb-xkb-dev libxcb-cursor-dev \
+  libxkbcommon-dev libxcb-xinerama0-dev \
+  libxkbcommon-x11-dev libstartup-notification0-dev \
+  libxcb-randr0-dev libxcb-shape0-dev libxcb-xrm-dev \
+  libxcb-xrm0 libxcb-render-util0-dev xutils-dev \
+  libxcb-shm0-dev libxcb-dpms0-dev libxcb-present-dev
+
+# Step 3: Clone the latest i3 repo (tag 4.24)
+git clone https://github.com/i3/i3.git
+cd i3
+git checkout 4.24
+
+# Step 4: Build and install
+meson build
+ninja -C build
+sudo ninja -C build install
+
+
 ##############################
 # 1. Install Packages
 ##############################
 install_packages_debian() {
     sudo apt update
     sudo apt install -y \
-        i3 rofi picom polybar playerctl kitty nitrogen maim zsh notify-osd light \
+        rofi picom polybar playerctl kitty nitrogen maim zsh notify-osd light \
         build-essential feh wget curl git cmake python3-pip meson dh-autoreconf \
         libcairo2-dev libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev \
         libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev \
@@ -46,12 +73,12 @@ install_packages_debian() {
         libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev libiw-dev libuv1-dev pkg-config python3-sphinx \
         fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra \
         mint-themes mint-y-icons dmz-cursor-theme x11-xserver-utils xbacklight xdotool \
-        pulseaudio pavucontrol dunst arc-theme gnome-shell-extension-manager \
+        pulseaudio pavucontrol lxappearance dunst arc-theme gnome-shell-extension-manager \
         flameshot  network-manager-gnome network-manager \
         xcompmgr xclip xfce4-power-manager acpi acpid unzip
 }
 
-#lxappearance
+
 
 install_packages_arch() {
     sudo pacman -Syu --noconfirm
