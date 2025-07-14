@@ -32,10 +32,10 @@ sudo apt install -y python3-sphinx
 sudo apt install -y build-essential feh
 
 # Clone and build Polybar
-echo "Building Polybar..."
-git clone https://github.com/polybar/polybar.git
+git clone --recursive https://github.com/polybar/polybar.git
 cd polybar
 ./build.sh
+
 
 # Install dependencies for Picom
 echo "Installing dependencies for Picom..."
