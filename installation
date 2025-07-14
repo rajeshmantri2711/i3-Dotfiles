@@ -41,6 +41,26 @@ cd i3
 git checkout 4.24
 
 # Step 4: Build and install
+
+
+
+
+
+for future install_packages_arch() {
+    sudo pacman -Syu --noconfirm
+    sudo pacman -S --noconfirm \
+        i3-gaps rofi picom polybar playerctl kitty nitrogen maim zsh light \
+        wget curl git feh base-devel python-pip ttf-jetbrains-mono ttf-cantarell ttf-noto \
+        papirus-icon-theme gnome-themes-extra mint-y-icons mint-themes xcursor-dmz \
+        xorg-xbacklight xorg-xset xdotool pulseaudio pavucontrol lxappearance dunst arc-gtk-theme \
+        flameshot networkmanager network-manager-applet xcompmgr xclip xfce4-power-manager acpi acpid unzip
+}
+
+if [[ "$OS" == "debian" ]]; then
+    install_packages_debian
+else
+    install_packages_arch
+fi
 meson build
 ninja -C build
 sudo ninja -C build install
