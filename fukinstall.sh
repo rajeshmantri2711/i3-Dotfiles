@@ -38,6 +38,11 @@ cd ~/newDotFiles
 # Removeing existing packages to avoid conflicts
 sudo apt remove --purge i3 polybar rofi picom -y
 
+#for zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
 ################################ installing i3 from source #####################################
 install_i3_from_source() {
     echo " Installing i3"
