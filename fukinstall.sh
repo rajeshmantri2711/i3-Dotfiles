@@ -83,7 +83,7 @@ install_rofi_from_source() {
         libxcb1-dev libxcb-xkb-dev libxcb-util0-dev \
         libxcb-ewmh-dev libxcb-icccm4-dev libxcb-cursor-dev \
         libpango1.0-dev libstartup-notification0-dev \
-        check libglib2.0-dev flex bison
+        check libglib2.0-dev libgdk-pixbuf2.0-dev flex bison
         
     # Clone and build
     git clone https://github.com/davatorium/rofi.git ~/newDotFiles/rofi-new
