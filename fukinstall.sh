@@ -234,8 +234,8 @@ clone_configs_and_fonts() {
     cp -r polybar ~/.config/
     cp -r rofi ~/.config/
     cp -r picom ~/.config/
-    cp -r .zsh ~/
-    cp -r .zshrc ~/
+    #cp -r .zsh ~/
+    #cp -r .zshrc ~/
 
     echo " Configuration successfully placed in ~/.config/"
     cd ~/newDotFiles|| exit 1
