@@ -189,7 +189,7 @@ install_packages_debian() {
     
     sudo apt update
     sudo apt install -y \
-        picom rofi build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
+        picom rofi kitty terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
         xapps-common notify-osd libnotify-bin libx11-dev libxext-dev libev-dev \
         libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev \
         libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-cursor-dev \
