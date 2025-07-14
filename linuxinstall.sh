@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Auto-detect OS family
+# Detecting  OS family
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     case "$ID" in
@@ -24,15 +24,15 @@ if [ -f /etc/os-release ]; then
             ;;
     esac
 else
-    echo "❌ Cannot detect OS (missing /etc/os-release)"
+    echo "Cannot detect OS (missing /etc/os-release)"
     exit 1
 fi
 
-echo "📦 Detected OS family: $OS"
+echo "Detected OS family: $OS"
 
 #for i3
 # Step 1: Remove existing i3 to avoid conflicts
-sudo apt remove --purge i3 -y
+sudo apt remove --purge i3 polybar rofi picom -y
 
 # Step 2: Install required build dependencies
 sudo apt install -y \
