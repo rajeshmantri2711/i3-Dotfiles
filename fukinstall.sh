@@ -184,46 +184,31 @@ fix_brightness_permissions() {
 }
 
 ################################ moving dot files to .config #####################################
-
 install_packages_debian() {
-    echo "Installing required Debian packages..."
-
+    echo " Installing required Debian packages..."
+    
     sudo apt update
     sudo apt install -y \
-        # Build tools
-        build-essential cmake meson ninja-build dh-autoreconf pkg-config check flex bison \
-        python3-pip python3-xcbgen xcb-proto git wget curl unzip \
-        
-        # X11 + XCB deps for i3, polybar, picom, rofi
-        libx11-dev libxext-dev libev-dev libpango1.0-dev libxkbcommon-dev libxkbcommon-x11-dev \
-        libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev libxcb-xkb-dev libxcb-xinerama0-dev \
-        libxcb-randr0-dev libxcb-cursor-dev libxcb-icccm4-dev libxcb-ewmh-dev libxcb-composite0-dev \
-        libxcb-image0-dev libxcb-render-util0-dev libxcb-shm0-dev libxcb-present-dev libxcb-xrm-dev \
-        libyajl-dev libstartup-notification0-dev libpixman-1-dev libdbus-1-dev libconfig-dev \
-        libxdg-basedir-dev libasound2-dev libpulse-dev libjsoncpp-dev libmpdclient-dev \
-        libcurl4-openssl-dev libiw-dev libuv1-dev
-        
-        # Fonts and theming
+        build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
+        xapps-common notify-osd libnotify-bin libx11-dev libxext-dev libev-dev \
+        libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev \
+        libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-cursor-dev \
+        libxcb-icccm4-dev libxcb-ewmh-dev libxcb-composite0-dev libxcb-image0-dev \
+        libxcb-render-util0-dev libxcb-shm0-dev libxcb-present-dev libxcb-xrm-dev \
+        libyajl-dev libstartup-notification0-dev xutils-dev xcb-proto python3-xcbgen \
+        libasound2-dev libpulse-dev libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev \
+        libiw-dev libuv1-dev check flex bison uthash-dev libpixman-1-dev libdbus-1-dev \
+        libpango1.0-dev libconfig-dev libxdg-basedir-dev \
         fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra mint-themes mint-y-icons \
         dmz-cursor-theme gtk2-engines-murrine lxappearance arc-theme \
-        
-        # Cinnamon settings only (not the full DE)
-        cinnamon-control-center cinnamon-settings-daemon xapps-common \
-        
-        # Screenshot and clipboard tools
-        maim flameshot xclip xdotool x11-xserver-utils xbacklight light \
-        
-        # Desktop utilities
-        nemo feh playerctl zsh dunst notify-osd libnotify-bin \
-        
-        # Network & audio tools
-        pulseaudio pavucontrol network-manager network-manager-gnome \
-        
-        # Power & system utils
-        xfce4-power-manager acpi acpid xcompmgr
+        playerctl maim nemo cinnamon-control-center cinnamon-settings-daemon light \
+        x11-xserver-utils xbacklight xdotool \
+        flameshot pulseaudio pavucontrol network-manager network-manager-gnome \
+        xcompmgr xclip xfce4-power-manager acpi acpid unzip feh wget curl git zsh
 
-    echo "Package installation complete."
+    echo " Package installation complete."
 }
+
 
 
 ################################ moving dot files to .config #####################################
