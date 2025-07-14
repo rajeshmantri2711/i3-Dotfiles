@@ -215,7 +215,7 @@ install_packages_debian() {
 
 clone_configs_and_fonts() {
     echo "Cloning i3 configuration..."
-    git https://github.com/i-am-paradoxx/i3-Dotfiles.git ~/newDotFiles/new-i3
+    git clone https://github.com/i-am-paradoxx/i3-Dotfiles.git ~/newDotFiles/new-i3
     cd ~/newDotFiles/new-i3 || exit 1
 
     echo " Installing fonts from repository..."
