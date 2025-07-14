@@ -189,7 +189,7 @@ install_packages_debian() {
     
     sudo apt update
     sudo apt install -y \
-        build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
+        picom rofi build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
         xapps-common notify-osd libnotify-bin libx11-dev libxext-dev libev-dev \
         libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev \
         libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-cursor-dev \
@@ -306,8 +306,6 @@ EOF
 if [[ "$OS" == "debian" ]]; then
     install_packages_debian
     install_i3_from_source
-    install_rofi_from_source
-    install_picom_from_source
     install_polybar_from_source
     install_clipboard_tools
     fix_brightness_permissions
