@@ -324,7 +324,7 @@ if [ "$USE_ZSH_AUTOSUGGESTIONS" = yes ]; then
 fi
 
 
-# enable command-not-found if installed
+# enable command-not-found if installled
 if [ -f /etc/zsh_command_not_found ]; then
     . /etc/zsh_command_not_found
 fi
