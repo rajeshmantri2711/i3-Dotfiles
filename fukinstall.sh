@@ -31,8 +31,10 @@ fi
 echo "Detected OS family: $OS"
 
 
+rm -rf ~/newDotFiles
 mkdir ~/newDotFiles
 cd ~/newDotFiles
+
 # Removeing existing packages to avoid conflicts
 sudo apt remove --purge i3 polybar rofi picom -y
 
