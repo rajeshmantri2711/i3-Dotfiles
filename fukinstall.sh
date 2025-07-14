@@ -41,13 +41,13 @@ sudo apt remove --purge i3 polybar rofi picom -y
 #for zsh
 
 # Remove existing Oh My Zsh if present
-if [ -d "$HOME/.oh-my-zsh" ]; then
-    echo "Removing existing Oh My Zsh..."
-    rm -rf "$HOME/.oh-my-zsh"
-fi
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+#if [ -d "$HOME/.oh-my-zsh" ]; then
+    #echo "Removing existing Oh My Zsh..."
+   # rm -rf "$HOME/.oh-my-zsh"
+#fi
+#sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+#git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+#git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 ################################ installing i3 from source #####################################
 install_i3_from_source() {
