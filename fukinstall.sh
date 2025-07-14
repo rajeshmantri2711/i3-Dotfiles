@@ -200,7 +200,7 @@ install_packages_debian() {
         libpango1.0-dev libconfig-dev libxdg-basedir-dev \
         fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra mint-themes mint-y-icons \
         dmz-cursor-theme gtk2-engines-murrine lxappearance arc-theme \
-        playerctl greenclip maim nemo cinnamon light x11-xserver-utils xbacklight xdotool \
+        playerctl maim nemo cinnamon light x11-xserver-utils xbacklight xdotool \
         flameshot pulseaudio pavucontrol network-manager network-manager-gnome \
         xcompmgr xclip xfce4-power-manager acpi acpid unzip feh wget curl git zsh
 
