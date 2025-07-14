@@ -34,7 +34,6 @@ If you have a ligature-aware terminal and don't want ligatures you can (usually)
 Once you narrow down your font choice of family (`Droid Sans`, `Inconsolata`, etc) and style (`bold`, `italic`, etc) you have 2 main choices:
 
 #### `Option 1: Download already patched font`
-
  * For a stable version download a font package from the [release page](https://github.com/ryanoasis/nerd-fonts/releases)
  * Or download the development version from the folders here
 
@@ -42,7 +41,7 @@ Once you narrow down your font choice of family (`Droid Sans`, `Inconsolata`, et
 
  * Patch your own variations with the various options provided by the font patcher (i.e. not include all symbols for smaller font size)
 
-For more information see: [The FAQ](https://github.com/ryanoasis/nerd-fonts/wiki/FAQ-and-Troubleshooting#which-font)
+For more Information see: [The FAQ](https://github.com/ryanoasis/nerd-fonts/wiki/FAQ-and-Troubleshooting#which-font)
 
 [SIL-RFN]:http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web_fonts_and_RFNs#14cbfd4a
 
