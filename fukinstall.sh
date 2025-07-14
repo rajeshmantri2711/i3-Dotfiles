@@ -348,7 +348,7 @@ if [[ "$OS" == "debian" ]]; then
     clone_configs_and_fonts
     set_appearance_theme
     setup_xinitrc_and_xresources
-    setup_i3_session_entry()
+    setup_i3_session_entry
     
 elif [[ "$OS" == "arch" ]]; then
     install_i3_from_source
