@@ -241,6 +241,42 @@ clone_configs_and_fonts() {
     cd ~/newDotFiles|| exit 1
 }
 
+################################ i3 entry session #####################################
+
+setup_i3_session_entry() {
+    echo "Setting up i3 session entry..."
+
+    SESSION_FILE="/usr/share/xsessions/i3.desktop"
+
+    if [[ ! -f "$SESSION_FILE" ]]; then
+        sudo tee "$SESSION_FILE" > /dev/null <<EOF
+[Desktop Entry]
+Name=i3
+Comment=Dynamic window manager
+Exec=i3
+Type=Application
+X-LightDM-DesktopName=i3
+DesktopNames=i3
+EOF
+        echo " i3 session entry created at $SESSION_FILE"
+    else
+        echo "ℹ i3 session entry already exists at $SESSION_FILE"
+    fi
+
+    # Try restarting the display manager (only if LightDM, GDM, or SDDM found)
+    DM=$(basename "$(cat /etc/X11/default-display-manager 2>/dev/null || echo '')")
+
+    case "$DM" in
+        lightdm|gdm3|sddm)
+            echo " Restarting $DM to apply session changes..."
+            sudo systemctl restart "$DM"
+            ;;
+        *)
+            echo " Unknown display manager or unable to detect. Please reboot manually."
+            ;;
+    esac
+}
+
 
 
 ################################ Themes and icons #####################################
@@ -312,6 +348,7 @@ if [[ "$OS" == "debian" ]]; then
     clone_configs_and_fonts
     set_appearance_theme
     setup_xinitrc_and_xresources
+    setup_i3_session_entry()
     
 elif [[ "$OS" == "arch" ]]; then
     install_i3_from_source
