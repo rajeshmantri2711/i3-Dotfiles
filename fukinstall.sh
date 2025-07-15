@@ -200,22 +200,23 @@ install_packages_debian() {
     
     sudo apt update
     sudo apt install -y \
-        picom rofi kitty terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
-        xapps-common notify-osd libnotify-bin libx11-dev libxext-dev libev-dev \
-        libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev \
-        libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-cursor-dev \
-        libxcb-icccm4-dev libxcb-ewmh-dev libxcb-composite0-dev libxcb-image0-dev \
-        libxcb-render-util0-dev libxcb-shm0-dev libxcb-present-dev libxcb-xrm-dev \
-        libyajl-dev libstartup-notification0-dev xutils-dev xcb-proto python3-xcbgen \
-        libasound2-dev libpulse-dev libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev \
-        libiw-dev libuv1-dev check flex bison uthash-dev libpixman-1-dev libdbus-1-dev \
-        libpango1.0-dev libconfig-dev libxdg-basedir-dev \
-        fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra mint-themes mint-y-icons \
-        dmz-cursor-theme gtk2-engines-murrine lxappearance arc-theme \
-        playerctl maim nemo cinnamon-control-center cinnamon-settings-daemon light \
-        x11-xserver-utils xbacklight xdotool \
-        flameshot pulseaudio pavucontrol network-manager network-manager-gnome \
-        xcompmgr xclip xfce4-power-manager acpi acpid unzip feh wget curl git zsh
+    picom rofi kitty terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
+    notify-osd libnotify-bin libx11-dev libxext-dev libev-dev \
+    libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev \
+    libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-cursor-dev \
+    libxcb-icccm4-dev libxcb-ewmh-dev libxcb-composite0-dev libxcb-image0-dev \
+    libxcb-render-util0-dev libxcb-shm0-dev libxcb-present-dev libxcb-xrm-dev \
+    libyajl-dev libstartup-notification0-dev xutils-dev xcb-proto python3-xcbgen \
+    libasound2-dev libpulse-dev libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev \
+    libiw-dev libuv1-dev check flex bison uthash-dev libpixman-1-dev libdbus-1-dev \
+    libpango1.0-dev libconfig-dev libxdg-basedir-dev \
+    fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra \
+    dmz-cursor-theme gtk2-engines-murrine lxappearance arc-theme \
+    playerctl maim thunar xfce4-settings light \
+    x11-xserver-utils xbacklight xdotool \
+    flameshot pulseaudio pavucontrol network-manager network-manager-gnome \
+    xcompmgr xclip xfce4-power-manager acpi acpid unzip feh wget curl git zsh
+
 
     echo " Package installation complete."
 }
@@ -305,10 +306,21 @@ set_appearance_theme() {
     cat <<EOF > ~/.config/gtk-3.0/settings.ini
 [Settings]
 gtk-theme-name=Adwaita-dark
-gtk-icon-theme-name=Papirus
-gtk-cursor-theme-name=DMZ-White
+gtk-application-prefer-dark-theme=true
+gtk-icon-theme-name=Papirus-Dark
+
 gtk-font-name=Sans 10
-gtk-application-prefer-dark-theme=1
+gtk-cursor-theme-size=0
+gtk-toolbar-style=GTK_TOOLBAR_BOTH
+gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
+gtk-button-images=1
+gtk-menu-images=1
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=1
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintfull
+gtk-cursor-theme-name=DMZ-White
 EOF
 
     # GTK 2 settings via gtkrc
