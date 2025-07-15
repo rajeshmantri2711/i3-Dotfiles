@@ -235,6 +235,7 @@ clone_configs_and_fonts() {
     # Install fonts only if directories exist
     [[ -d JetBrainsMono ]] && cp -r JetBrainsMono/* ~/.local/share/fonts/
     [[ -d Work_Sans ]] && cp -r Work_Sans/* ~/.local/share/fonts/
+    [[ -d FiraCode ]] && cp -r FiraCode/* ~/.local/share/fonts/
     fc-cache -fv
 
     echo " Copying configuration files..."
