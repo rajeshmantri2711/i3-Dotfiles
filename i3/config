@@ -66,7 +66,7 @@ bindsym $mod+Shift+a exec --no-startup-id ~/.config/rofi/bin/network
 bindsym $mod+e exec --no-startup-id thunar
 #bindsm  $mod+v exec --no-startup-id /usr/bin/diodon
 bindsym $mod+v exec --no-startup-id rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme ~/.config/rofi/config/clipboard.rasi
-bindsym $mod+i exec --no-startup-id cinnamon-settings
+bindsym $mod+i exec --no-startup-id xfce4-settings-manager
 bindsym Control+Shift+Escape exec --no-startup-id gnome-system-monitor
 bindsym $mod+l exec cinnamon-screensaver-command -l
 
