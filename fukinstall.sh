@@ -31,9 +31,9 @@ fi
 echo "Detected OS family: $OS"
 
 
-rm -rf ~/newDotFiles
-mkdir ~/newDotFiles
-cd ~/newDotFiles
+rm -rf ~/DotFiles
+mkdir ~/DotFiles
+cd ~/DotFiles
 
 # Removeing existing packages to avoid conflicts
 sudo apt remove --purge i3 polybar rofi picom -y
@@ -70,18 +70,18 @@ install_i3_from_source() {
     ninja -C build
     sudo ninja -C build install
     
-    cd ~/newDotFiles
+    cd ~/DotFiles
 }
 
 ################################ installing i3-gaps #####################################
 install_i3_gaps_from_source() {
     echo " Installing i3-gaps"
-    git clone https://github.com/Airblader/i3 ~/newDotFiles/i3-gaps
-    cd ~/newDotFiles/i3-gaps
+    git clone https://github.com/Airblader/i3 ~/DotFiles/i3-gaps
+    cd ~/DotFiles/i3-gaps
     meson setup --prefix=/usr build
     ninja -C build
     sudo ninja -C build install
-    cd ~/newDotFiles
+    cd ~/DotFiles
     echo "i3-gaps installation completed."
 }
 
@@ -97,15 +97,15 @@ install_rofi_from_source() {
         check libglib2.0-dev libgdk-pixbuf2.0-dev flex bison
         
     # Clone and build
-    git clone https://github.com/davatorium/rofi.git ~/newDotFiles/rofi-new
-    cd ~/newDotFiles/rofi-new
+    git clone https://github.com/davatorium/rofi.git ~/DotFiles/rofi-new
+    cd ~/DotFiles/rofi-new
 
     mkdir -p build
     cd build
     meson ..
     ninja
     sudo ninja install
-    cd ~/newDotFiles
+    cd ~/DotFiles
     echo "Rofi installation completed."
 }
 
@@ -122,15 +122,15 @@ install_picom_from_source() {
         libgl1-mesa-dev libpcre2-dev libev-dev uthash-dev \
         libxext-dev libxcb-xinerama0-dev libx11-dev libxdg-basedir-dev
         
-    git clone https://github.com/yshui/picom.git cd ~/newDotFiles/picom-new
-    cd ~/newDotFiles/picom-new
+    git clone https://github.com/yshui/picom.git cd ~/DotFiles/picom-new
+    cd ~/DotFiles/picom-new
 
     git submodule update --init --recursive
     meson setup --buildtype=release build
     ninja -C build
     sudo ninja -C build install
     
-    cd ~/newDotFiles
+    cd ~/DotFiles
     echo "Picom successfully installed."
 }
 
@@ -146,12 +146,12 @@ install_polybar_from_source() {
         libmpdclient-dev libcurl4-openssl-dev libnl-genl-3-dev \
         pkg-config python3-xcbgen xcb-proto python3
         
-    git clone --recursive https://github.com/polybar/polybar.git ~/newDotFiles/Polybar-new
-    cd ~/newDotFiles/Polybar-new
+    git clone --recursive https://github.com/polybar/polybar.git ~/DotFiles/Polybar-new
+    cd ~/DotFiles/Polybar-new
 
     ./build.sh
 
-    cd ~/newDotFiles
+    cd ~/DotFiles
     echo "Polybar installed successfully."
 }
 
@@ -226,8 +226,8 @@ install_packages_debian() {
 
 clone_configs_and_fonts() {
     echo "Cloning i3 configuration..."
-    git clone https://github.com/i-am-paradoxx/i3-Dotfiles.git ~/newDotFiles/new-i3
-    cd ~/newDotFiles/new-i3 || exit 1
+    git clone https://github.com/i-am-paradoxx/i3-Dotfiles.git ~/DotFiles/new-i3
+    cd ~/DotFiles/new-i3 || exit 1
 
     echo " Installing fonts from repository..."
     mkdir -p ~/.local/share/fonts
@@ -249,7 +249,7 @@ clone_configs_and_fonts() {
     cp -r .zshrc ~/
 
     echo " Configuration successfully placed in ~/.config/"
-    cd ~/newDotFiles|| exit 1
+    cd ~/DotFiles|| exit 1
 }
 
 ################################ i3 entry session #####################################
