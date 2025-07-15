@@ -169,29 +169,28 @@ install_clipboard_tools() {
 ################################ Brightness settings and fixes #####################################
 
 fix_brightness_permissions() {
-    echo " setting up brightness control permissions."
+    echo "Setting up brightness control permissions with brightnessctl..."
 
-    sudo usermod -aG video "$USER"
+sudo usermod -aG video "$USER"
 
-    BACKLIGHT_DIR=$(ls /sys/class/backlight/ | head -n 1)
-    if [[ -n "$BACKLIGHT_DIR" ]]; then
-        FULL_PATH="/sys/class/backlight/$BACKLIGHT_DIR"
-        echo "Found backlight interface: $BACKLIGHT_DIR"
+BACKLIGHT_DIR=$(ls /sys/class/backlight/ | head -n 1)
+if [[ -n "$BACKLIGHT_DIR" ]]; then
+    FULL_PATH="/sys/class/backlight/$BACKLIGHT_DIR"
+    echo "Found backlight interface: $BACKLIGHT_DIR"
 
-        sudo chmod 666 "$FULL_PATH/brightness" || true
-        sudo chmod 666 "$FULL_PATH/max_brightness" || true
+    echo "Writing udev rule for brightnessctl..."
+    sudo tee /etc/udev/rules.d/90-backlight.rules > /dev/null <<EOF
+SUBSYSTEM=="backlight", ACTION=="add", RUN+="/bin/chgrp video $FULL_PATH/brightness", RUN+="/bin/chmod g+w $FULL_PATH/brightness"
+EOF
 
-        echo " Writing udev rule for backlight..."
-        echo "ACTION==\"add\", SUBSYSTEM==\"backlight\", RUN+=\"/bin/chmod 0666 $FULL_PATH/brightness\"" | \
-            sudo tee /etc/udev/rules.d/99-backlight.rules > /dev/null
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
 
-        sudo udevadm control --reload-rules
-        sudo chmod +s /usr/bin/light || true
+    echo "Brightness permissions configured for brightnessctl."
+else
+    echo "No backlight device found."
+fi
 
-        echo "Brightness permissions fixed."
-    else
-        echo "No backlight device found."
-    fi
 }
 
 ################################ moving dot files to .config #####################################
@@ -212,7 +211,7 @@ install_packages_debian() {
     libpango1.0-dev libconfig-dev libxdg-basedir-dev \
     fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra \
     dmz-cursor-theme gtk2-engines-murrine lxappearance arc-theme \
-    playerctl maim thunar xfce4-settings light \
+    playerctl maim thunar xfce4-settings brightnessctl \
     x11-xserver-utils xbacklight xdotool \
     flameshot pulseaudio pavucontrol network-manager network-manager-gnome \
     xcompmgr xclip xfce4-power-manager acpi acpid unzip feh wget curl git zsh
