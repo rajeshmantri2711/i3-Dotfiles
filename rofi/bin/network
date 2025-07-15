@@ -11,28 +11,24 @@ _PIP="$(wget --timeout=30 http://ipinfo.io/ip -qO -)"
 active=""
 urgent=""
 
-if (ping -c 1 archlinux.org || ping -c 1 google.com || ping -c 1 bitbucket.org || ping -c 1 github.com || ping -c 1 sourceforge.net) &>/dev/null; then
+if (ping -c 1 google.com || ping -c 1 github.com) &>/dev/null; then
 	if [[ $STATUS == *"enable"* ]]; then
-        if [[ $IFACE == e* ]]; then
-            connected="直 Connected To Internet"
-        else
-            connected="直 Connected To Internet"
-        fi
-	active="-a 0"
-	SSID="$_SSID"
-	PIP="$_PIP"
+        connected="Online"
+        active="-a 0"
+        SSID="$_SSID"
+        PIP="$_PIP"
 	fi
 else
     urgent="-u 0"
     SSID="Disconnected"
     PIP="NA"
-    connected="睊 Offline"
+    connected="Offline"
 fi
 
-# Icons
-bmon=" Open Bandwidth Monitor"
-launch_cli=" Open Network Manager"
-launch="ﯱ Open Connection Editor"
+# Options (no icons)
+bmon="Open Bandwidth Monitor"
+launch_cli="Open Network Manager (nmtui)"
+launch="Open Connection Editor"
 
 options="$connected\n$bmon\n$launch_cli\n$launch"
 
@@ -56,4 +52,3 @@ case $chosen in
         nm-connection-editor
         ;;
 esac
-
