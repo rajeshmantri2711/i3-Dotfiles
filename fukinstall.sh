@@ -183,7 +183,7 @@ fi
 
 }
 
-################################ moving dot files to .config #####################################
+################################ installing debian packages #####################################
 install_packages_debian() {
     echo " Installing required Debian packages..."
     
