@@ -271,8 +271,7 @@ EOF
 
     case "$DM" in
         lightdm|gdm3|sddm)
-            echo " Restarting $DM to apply session changes..."
-            sudo systemctl restart "$DM"
+            echo "  $DM changes applied..."
             ;;
         *)
             echo " Unknown display manager or unable to detect. Please reboot manually."
