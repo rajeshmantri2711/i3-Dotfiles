@@ -38,16 +38,6 @@ cd ~/DotFiles
 # Removeing existing packages to avoid conflicts
 sudo apt remove --purge i3 polybar rofi picom -y
 
-#for zsh
-
-# Remove existing Oh My Zsh if present
-#if [ -d "$HOME/.oh-my-zsh" ]; then
-    #echo "Removing existing Oh My Zsh..."
-   # rm -rf "$HOME/.oh-my-zsh"
-#fi
-#sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-#git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 ################################ installing i3 from source #####################################
 install_i3_from_source() {
@@ -246,6 +236,7 @@ clone_configs_and_fonts() {
     cp -r polybar ~/.config/
     cp -r rofi ~/.config/
     cp -r picom ~/.config/
+    cp -r betterlockscreen ~/.config/
     #cp -r .zsh ~/
     cp -r .zshrc ~/
 
@@ -289,6 +280,33 @@ EOF
     esac
 }
 
+
+################################ betterlockscree #####################################
+
+setup_betterlockscreen() {
+    echo "Installing dependencies..."
+    sudo apt update
+    sudo apt install -y i3lock imagemagick libpam0g-dev libxcb-xkb-dev 
+
+    echo "Downloading and installing betterlockscreen..."
+    wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
+
+    echo -n "Enter the full image path to use as lockscreen wallpaper (or press Enter to use default): "
+    read -r image_path
+
+    if [[ -z "$image_path" ]]; then
+        image_path="$HOME/.config/betterlockscreen/spider.png"
+        echo "Using default image: $image_path"
+    fi
+
+    if [[ -f "$image_path" ]]; then
+        echo "Applying dimblur effect with betterlockscreen..."
+        betterlockscreen -u "$image_path" --fx dimblur
+        echo "betterlockscreen setup complete."
+    else
+        echo "Error: Image not found at $image_path"
+    fi
+}
 
 
 ################################ Themes and icons #####################################
@@ -372,6 +390,7 @@ if [[ "$OS" == "debian" ]]; then
     set_appearance_theme
     setup_xinitrc_and_xresources
     setup_i3_session_entry
+    setup_betterlockscreen
     
 elif [[ "$OS" == "arch" ]]; then
     install_i3_from_source
