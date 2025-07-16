@@ -387,9 +387,9 @@ if [[ "$OS" == "debian" ]]; then
     fix_brightness_permissions
     clone_configs_and_fonts
     set_appearance_theme
+    setup_betterlockscreen
     setup_xinitrc_and_xresources
     setup_i3_session_entry
-    setup_betterlockscreen
     
 elif [[ "$OS" == "arch" ]]; then
     install_i3_from_source
