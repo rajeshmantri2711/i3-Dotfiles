@@ -190,21 +190,27 @@ install_packages_debian() {
     sudo apt update
     sudo apt install -y \
     picom rofi kitty terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
-    notify-osd libnotify-bin libx11-dev libxext-dev libev-dev \
-    libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev libxcb-util0-dev libxcb-keysyms1-dev \
-    libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-cursor-dev \
-    libxcb-icccm4-dev libxcb-ewmh-dev libxcb-composite0-dev libxcb-image0-dev \
-    libxcb-render-util0-dev libxcb-shm0-dev libxcb-present-dev libxcb-xrm-dev \
-    libyajl-dev libstartup-notification0-dev xutils-dev xcb-proto python3-xcbgen \
+    notify-osd i3-wm i3status i3lock suckless-tools \
+    libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev \
+    libxcb-util0-dev libxcb-icccm4-dev libyajl-dev \
+    libev-dev libxcb-xkb-dev libxcb-cursor-dev \
+    libxkbcommon-dev libxcb-xinerama0-dev \
+    libxkbcommon-x11-dev libstartup-notification0-dev \
+    libxcb-randr0-dev libxcb-shape0-dev libxcb-xrm-dev \
+    libxcb-xrm0 libxcb-render-util0-dev xutils-dev \
+    libxcb-shm0-dev libxcb-dpms0-dev libxcb-present-dev libnotify-bin \
+    libx11-dev libxext-dev libxcb-ewmh-dev libxcb-composite0-dev libxcb-image0-dev \
+    xcb-proto python3-xcbgen \
     libasound2-dev libpulse-dev libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev \
     libiw-dev libuv1-dev check flex bison uthash-dev libpixman-1-dev libdbus-1-dev \
-    libpango1.0-dev libconfig-dev libxdg-basedir-dev \
+    libconfig-dev libxdg-basedir-dev \
     fonts-jetbrains-mono papirus-icon-theme gnome-themes-extra \
     dmz-cursor-theme gtk2-engines-murrine lxappearance arc-theme \
     playerctl maim bluez blueman pulseaudio-module-bluetooth rfkill thunar xfce4-settings brightnessctl \
     x11-xserver-utils xbacklight xdotool \
     flameshot pulseaudio pulseaudio-utils pavucontrol network-manager network-manager-gnome \
     xcompmgr xclip xfce4-power-manager acpi acpid unzip feh wget curl git zsh
+
 
 
     echo " Package installation complete."
@@ -381,7 +387,6 @@ EOF
 
 if [[ "$OS" == "debian" ]]; then
     install_packages_debian
-    install_i3_from_source
     install_polybar_from_source
     install_clipboard_tools
     fix_brightness_permissions
