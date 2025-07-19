@@ -82,6 +82,7 @@ mainbox {
 
 element {
     background-color:               @BG;
+    border-color:          	        @BG-A;
     text-color:                     @FG;
     orientation:                    horizontal;
     border-radius:                  5px;
@@ -108,8 +109,8 @@ element-text {
 }
 
 element selected {
-    background-color:               @BG;
-    text-color:                     @FG;
+    background-color:               @BGA;
+    text-color:                     @SEL;
     border-radius:                  5px;
     border-color:                   @BDR;
 }

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Check wallpaper selector status and current selection
+
+echo "🎨 Wallpaper Selector Status"
+echo "=========================="
+
+# Check if manual selection is active
+if [[ -f "/tmp/wallpaper_selection" ]]; then
+    manual_selection=$(cat /tmp/wallpaper_selection)
+    echo "Mode: MANUAL OVERRIDE"
+    echo "Current: $manual_selection"
+    echo "Override active until system restart"
+else
+    echo "Mode: AUTOMATIC (time-based)"
+    current_hour=$(date +%H)
+    current_hour=$((10#$current_hour))
+    
+    if [[ $current_hour -ge 6 && $current_hour -lt 18 ]]; then
+        echo "Current: white.png (Daytime 6AM-6PM)"
+    elif [[ $current_hour -ge 18 && $current_hour -lt 22 ]]; then
+        echo "Current: windblown.jpg (Evening 6PM-10PM)"
+    else
+        echo "Current: dark.png (Night 10PM-6AM)"
+    fi
+fi
+
+echo ""
+echo "Time: $(date +%H:%M)"
+echo "Cron jobs active: $(crontab -l 2>/dev/null | grep -c auto-wallpaper || echo 0)"
+
+# Check recent log entries
+if [[ -f "$HOME/.config/rofi/logs/auto-wallpaper.log" ]]; then
+    echo ""
+    echo "Recent auto changes:"
+    tail -5 "$HOME/.config/rofi/logs/auto-wallpaper.log" 2>/dev/null || echo "No recent logs"
+fi

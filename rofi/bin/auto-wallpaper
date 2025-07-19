@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Auto wallpaper changer - runs the wallpaper selector in auto mode
+# This script can be called by cron or systemd timer
+
+# Set display for GUI applications (needed when run from cron)
+export DISPLAY=:0
+
+# Run the wallpaper selector in auto mode
+~/.config/rofi/bin/wallpaper-selector --auto
+
+# Log the execution
+echo "$(date): Auto wallpaper changed" >> ~/.config/rofi/logs/auto-wallpaper.log

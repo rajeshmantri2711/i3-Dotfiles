@@ -1,5 +1,6 @@
 configuration {
-    show-icons:                     false;
+    font:			    "JetBrainsMono Nerd Font 10";
+    show-icons:                     true;
     display-drun: 		            "";
     drun-display-format:            "{icon} {name}";
     disable-history:                false;
@@ -14,35 +15,14 @@ window {
     transparency:                   "real";
     background-color:               @BG;
     text-color:                     @FG;
-    border:                         2px;
-    border-color:                   @BDR;
-    border-radius:                  10px;
-    width:                          400px;
+    width:                          700px;
+    height:			                  42%;
     anchor:                         center;
-    x-offset:                       0;
-    y-offset:                       0;
+    location:                       center;
+    x-offset:                       0px;
+    y-offset:                       0px;
 }
 
-prompt {
-    enabled: 			            true;
-    margin: 			            0px 0px 0px 8px;
-    padding: 			            8px;
-    background-color: 		        @BG;
-    text-color: 		            @FG;
-    border:                  	    0px 0px 2px 0px;
-    border-color:                   @BDR;
-    border-radius:                  10px;
-}
-
-textbox-prompt-colon {
-    expand: 			            false;
-    str: 			                "";
-    border-radius:                  100%;
-    background-color:               @BG;
-    text-color:                     @FG;
-    padding:                        8px 12px 8px 12px;
-    font:			                "Iosevka Nerd Font 10";
-}
 
 entry {
     background-color:               @BG;
@@ -50,24 +30,24 @@ entry {
     placeholder-color:              @FG;
     expand:                         true;
     horizontal-align:               0;
-    placeholder:                    "Search...";
+    placeholder:                    "  Search";
     blink:                          true;
-    border:                  	    0px 0px 2px 0px;
+    font:			    "JetBrainsMono Nerd Font 20";
+    border:                  	    2px 2px 2px 2px;
     border-color:                   @BDR;
-    border-radius:                  10px;
-    padding:                        8px;
+    border-radius:                  8px;
+    padding:                        10px;
 }
 
 inputbar {
-    children: 			            [ textbox-prompt-colon, prompt ];
-    background-color:               @BG;
+    children: 		            [ entry ];
+    background-color:              @BG;
     text-color:                     @FG;
     expand:                         false;
     border:                  	    0px 0px 0px 0px;
     border-radius:                  0px;
     border-color:                   @BDR;
     margin:                         0px 0px 0px 0px;
-    padding:                        0px;
     position:                       center;
 }
 
@@ -80,9 +60,9 @@ case-indicator {
 
 listview {
     background-color:               @BG;
-    columns:                        1;
+    columns:                        3;
     lines:			                4;
-    spacing:                        4px;
+    spacing:                        15px;
     cycle:                          true;
     dynamic:                        true;
     layout:                         vertical;
@@ -91,61 +71,68 @@ listview {
 mainbox {
     background-color:               @BG;
     children:                       [ inputbar, listview ];
-    spacing:                        15px;
-    padding:                        15px;
+    spacing:                        18px;
+    padding:                        18px;
 }
 
 element {
     background-color:               @BG;
+    border-color:          	        @BG-A;
+    border: 			            2px;
     text-color:                     @FG;
-    orientation:                    horizontal;
-    border-radius:                  10px;
-    padding:                        6px 6px 6px 6px;
+    orientation:                    vertical;
+    border-radius:                  12px;
+    padding:                        6px 4px 6px 4px;
 }
 
 element-icon {
-    background-color: 		        inherit;
+    background-color: 	            inherit;
     text-color:       		        inherit;
+    horizontal-align:               0.5;
+    vertical-align:                 0.5;
     size:                           0px;
     border:                         0px;
+    margin:                         0px 0px 8px 0px;
 }
 
 element-text {
     background-color: 		        inherit;
     text-color:       		        inherit;
     expand:                         true;
-    horizontal-align:               0;
+    horizontal-align:               0.5;
     vertical-align:                 0.5;
-    margin:                         2px 0px 2px 6px;
+    margin:                         0px;
+    font:                          "JetBrainsMono Nerd Font 11";
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:               @UGT;
+    text-color:                     @FG;
+    border-radius:                  9px;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:               @BGA;
+    text-color:                     @FG;
 }
 
 element selected {
     background-color:               @BGA;
-    border-color:          	        @BG-A;
     text-color:                     @SEL;
     border:                  	    0px 0px 0px 0px;
     border-radius:                  10px;
     border-color:                   @BDR;
 }
 
-element.active,
-element.selected.urgent {
-  background-color: @ON;
-  text-color: @BG;
-  border-color: @ON;
+element selected.urgent {
+    background-color:               @UGT;
+    text-color:                     @FG;
 }
 
-element.selected.urgent {
-  border-color: @BDR;
+element selected.active {
+    background-color:               @BGA;
+    color:                          @FG;
 }
 
-element.urgent,
-element.selected.active {
-  background-color: @OFF;
-  text-color: @BG;
-  border-color: @OFF;
-}
-
-element.selected.active {
-  border-color: @BDR;
-}

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Reset wallpaper to automatic mode
+# Removes manual selection and applies time-based wallpaper
+
+echo "Resetting wallpaper to automatic mode..."
+
+# Remove manual selection file
+rm -f /tmp/wallpaper_selection
+
+# Apply automatic wallpaper based on current time
+~/.config/rofi/bin/wallpaper-selector --auto
+
+echo "Wallpaper reset to automatic mode"

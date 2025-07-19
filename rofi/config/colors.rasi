@@ -1,14 +1,14 @@
-/* Default Theme - Custom Colors */
+/* Windblown Theme - Auto-extracted colors */
 * {
-    BG:    #212232;
-    BGA:   #63b4e3;
-    FG:    #FFFFFF;
-    FGA:   #FFFFFF;
-    BDR:   #CBA6F7;
-    SEL:   #FFFFFF;
-    UGT:   #F28FAD;
-    IMG:   #FAE3B0;
-    OFF:   #575268;
-    ON:    #ABE9B3;
+    BG:    #24304Eff;
+    BGA:   #9E796Bff;
+    FG:    #ffffffff;
+    FGA:   #ffffffff;
+    BDR:   #384566ff;
+    SEL:   #0F151Fff;
+    UGT:   #594C5Eff;
+    IMG:   #9E796Bff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
     BG-A:  #313244;
 }

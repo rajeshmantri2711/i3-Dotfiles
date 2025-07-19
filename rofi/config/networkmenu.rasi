@@ -97,6 +97,7 @@ mainbox {
 
 element {
     background-color:               @BG;
+    border-color:          	        @BG-A;
     text-color:                     @FG;
     orientation:                    horizontal;
     border-radius:                  4px;

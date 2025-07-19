@@ -123,8 +123,8 @@ element-text {
 }
 
 element selected {
-    background-color:               @IMG;
-    text-color:                     @BG;
+    background-color:               @BGA;
+    text-color:                     @SEL;
     border:                  	    0px 0px 0px 0px;
     border-radius:                  10px;
     border-color:                   @BDR;

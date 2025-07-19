@@ -1,48 +1,91 @@
 #!/usr/bin/env bash
 
-# Wallpaper selector with predefined colors
-rofi_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/wifi.rasi"
+# Wallpaper selector with predefined colors and automatic time-based selection
+rofi_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/wallpaper-grid.rasi"
 
 # Wallpaper directory
 WALLPAPER_DIR="$HOME/.config/polybar/Wallpaper"
 COLORS_FILE="$HOME/.config/rofi/config/colors.rasi"
+TEMP_SELECTION_FILE="/tmp/wallpaper_selection"
+
+# Function for automatic wallpaper based on time
+auto_wallpaper() {
+    # Check if user has manually selected a wallpaper
+    if [[ -f "$TEMP_SELECTION_FILE" ]]; then
+        manual_selection=$(cat "$TEMP_SELECTION_FILE")
+        wallpaper_path="$WALLPAPER_DIR/$manual_selection"
+        
+        if [[ -f "$wallpaper_path" ]]; then
+            wallpaper_name="$manual_selection"
+            set_wallpaper "$wallpaper_path"
+            set_wallpaper_colors "$wallpaper_name"
+            notify-send "Wallpaper" "Manual selection active: $(basename "$wallpaper_path" | sed 's/\.[^.]*$//')  ($(date +%H:%M))" -t 1000
+            notify-send "Rofi" "Colors updated for rofi themes" -t 500
+            return 0
+        else
+            # Remove invalid selection file
+            rm -f "$TEMP_SELECTION_FILE"
+        fi
+    fi
+    
+    current_hour=$(date +%H)
+    
+    # Convert to integer for comparison
+    current_hour=$((10#$current_hour))
+    
+    # Time-based wallpaper selection:
+    # 6 AM (06:00) to 6 PM (18:00) = white wallpaper (daytime)
+    # 6 PM (18:00) to 10 PM (22:00) = windblown wallpaper (evening)
+    # 10 PM (22:00) to 6 AM (06:00) = dark wallpaper (nighttime)
+    if [[ $current_hour -ge 6 && $current_hour -lt 18 ]]; then
+        # Daytime: use white wallpaper
+        wallpaper_path="$WALLPAPER_DIR/white.png"
+        wallpaper_name="white.png"
+        notify-send "Wallpaper" "Daytime mode: Setting white wallpaper" -t 1000
+    elif [[ $current_hour -ge 18 && $current_hour -lt 22 ]]; then
+        # Evening: use windblown wallpaper
+        wallpaper_path="$WALLPAPER_DIR/windblown.jpg"
+        wallpaper_name="windblown.jpg"
+        notify-send "Wallpaper" "Evening mode: Setting windblown wallpaper" -t 1000
+    else
+        # Nighttime: use dark wallpaper (22:00-06:00)
+        wallpaper_path="$WALLPAPER_DIR/dark.png"
+        wallpaper_name="dark.png"
+        notify-send "Wallpaper" "Nighttime mode: Setting dark wallpaper" -t 1000
+    fi
+    
+    if [[ -f "$wallpaper_path" ]]; then
+        set_wallpaper "$wallpaper_path"
+        set_wallpaper_colors "$wallpaper_name"
+        notify-send "Wallpaper" "Auto-applied: $(basename "$wallpaper_path" | sed 's/\.[^.]*$//')  ($(date +%H:%M))" -t 1000
+        notify-send "Rofi" "Colors updated for rofi themes" -t 1000
+        return 0
+    else
+        notify-send "Error" "Auto wallpaper file not found: $wallpaper_path" -t 5000
+        return 1
+    fi
+}
 
 # Function to set colors for a specific wallpaper
 set_wallpaper_colors() {
     local wallpaper_name="$1"
     
     case "$wallpaper_name" in
-        "night-time.jpeg")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Night Time Theme */
-* {
-    BG:    #0a0a0aff;
-    BGA:   #1a1a2eff;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #4c4c7eff;
-    SEL:   #0a0a0aff;
-    UGT:   #ff6b6bff;
-    IMG:   #4c4c7eff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-}
-EOF
-            ;;
         "goku.jpg")
             cat > "$COLORS_FILE" << 'EOF'
 /* Goku Theme */
 * {
-    BG:    #3399FF;
-    BGA:   #ff6b35ff;
-    FG:    #ffffffff;
-    FGA:   #ffffffff;
-    BDR:   #ff6b35ff;
-    SEL:   #1a1a1aff;
+    BG:    #ffffffff;
+    BGA:   #4da6ffff;
+    FG:    #000000ff;
+    FGA:   #000000ff;
+    BDR:   #006600ff;
+    SEL:   #ffffffff;
     UGT:   #ffab40ff;
-    IMG:   #ff6b35ff;
+    IMG:   #4da6ffff;
     OFF:   #666666ff;
-    ON:    #00ff00ff;
+    ON:    #006600ff;
+    BG-A:  #313244;
 }
 EOF
             ;;
@@ -59,24 +102,151 @@ EOF
     UGT:   #F28FAD;
     IMG:   #FAE3B0;
     OFF:   #575268;
-    ON:    #ABE9B3;
+    ON:    #00ff00;
     BG-A:  #313244;
+}
 EOF
             ;;
-        "earth.jpg")
+        "desk1.jpg")
             cat > "$COLORS_FILE" << 'EOF'
-/* Earth Theme */
+/* Desk1 Theme */
 * {
-    BG:    #1b2631ff;
-    BGA:   #3498dbff;
+    BG:    #2c2c2cff;
+    BGA:   #F6A192FF;
     FG:    #ffffffff;
     FGA:   #ffffffcc;
-    BDR:   #3498dbff;
-    SEL:   #1b2631ff;
-    UGT:   #e74c3cff;
-    IMG:   #3498dbff;
+    BDR:   #4a90e2ff;
+    SEL:   #2c2c2cff;
+    UGT:   #ff6b6bff;
+    IMG:   #4a90e2ff;
     OFF:   #666666ff;
     ON:    #00ff00ff;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "hehe.png")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Hehe Theme */
+* {
+    BG:    #1a1a1aff;
+    BGA:   #6B8EA9ff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #6B8EA9ff;
+    SEL:   #ffffffff;
+    UGT:   #ff1493ff;
+    IMG:   #6B8EA9ff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "ice.png")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Ice Theme */
+* {
+    BG:    #0f1419ff;
+    BGA:   #87ceebff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #87ceebff;
+    SEL:   #0f1419ff;
+    UGT:   #4682b4ff;
+    IMG:   #87ceebff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "mountain.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Mountain Theme - Auto-extracted colors */
+* {
+    BG:    #42204Cff;
+    BGA:   #DC907Dff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #9B7BB8ff;
+    SEL:   #ffffffff;
+    UGT:   #e67e22ff;
+    IMG:   #DC907Dff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "nsfw.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* NSFW Theme */
+* {
+    BG:    #1c1c1ccc;
+    BGA:   #dc143cff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #dc143cff;
+    SEL:   #1c1c1cff;
+    UGT:   #ff4500ff;
+    IMG:   #dc143cff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "white.png")
+            cat > "$COLORS_FILE" << 'EOF'
+/* White Theme */
+* {
+    BG:    #ffdab9cc;
+    BGA:   #333333ff;
+    FG:    #000000ff;
+    FGA:   #333333ff;
+    BDR:   #333333ff;
+    SEL:   #e0e0e0ff;
+    UGT:   #ff6b6bff;
+    IMG:   #333333ff;
+    OFF:   #ccccccff;
+    ON:    #00ff00ff;
+}
+EOF
+            ;;
+        "windblown.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Windblown Theme - Auto-extracted colors */
+* {
+    BG:    #24304Eff;
+    BGA:   #9E796Bff;
+    FG:    #ffffffff;
+    FGA:   #ffffffff;
+    BDR:   #384566ff;
+    SEL:   #0F151Fff;
+    UGT:   #594C5Eff;
+    IMG:   #9E796Bff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "dark.png")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Dark Theme */
+* {
+    BG:    #2a2a2aff;
+    BGA:   #FFDBCCFF;
+    FG:    #ffffffff;
+    FGA:   #000000ff;
+    BDR:   #FDE0D9ff;
+    SEL:   #000000ff;
+    UGT:   #ef4444ff;
+    IMG:   #FDE0D9ff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+    BG-A:  #FDE0D9CC;
 }
 EOF
             ;;
@@ -93,25 +263,8 @@ EOF
     UGT:   #F28FAD;
     IMG:   #FAE3B0;
     OFF:   #575268;
-    ON:    #ABE9B3;
-    BG-A:  #313244;
-}
-EOF
-            ;;
-        "pixel.png")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Pixel Theme */
-* {
-    BG:    #1a1a1aff;
-    BGA:   #ff6b9dff;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #ff6b9dff;
-    SEL:   #1a1a1aff;
-    UGT:   #ff4081ff;
-    IMG:   #ff6b9dff;
-    OFF:   #666666ff;
     ON:    #00ff00ff;
+    BG-A:  #313244;
 }
 EOF
             ;;
@@ -150,6 +303,12 @@ set_wallpaper() {
     # gsettings set org.gnome.desktop.background picture-uri "file://$wallpaper_path"
 }
 
+# Check if auto mode is requested
+if [[ "$1" == "--auto" || "$1" == "-a" ]]; then
+    auto_wallpaper
+    exit 0
+fi
+
 # Get available wallpapers
 if [[ ! -d "$WALLPAPER_DIR" ]]; then
     echo "Wallpaper directory not found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
@@ -163,9 +322,12 @@ if [[ -z "$wallpapers" ]]; then
     exit 1
 fi
 
-# Create menu with just filenames without extensions
-menu_options=""
+# Create menu with just filenames without extensions, plus Auto option
+menu_options=" Auto (Time-based)\n"
 declare -A wallpaper_map  # Associate display names with full paths
+
+# Add auto option to map
+wallpaper_map[" Auto (Time-based)"]="AUTO"
 
 while IFS= read -r wallpaper; do
     filename=$(basename "$wallpaper")
@@ -183,10 +345,21 @@ menu_options=${menu_options%\\n}
 chosen=$(echo -e "$menu_options" | $rofi_command -p "Select Wallpaper" -dmenu -selected-row 0 -no-custom)
 
 if [[ -n "$chosen" ]]; then
+    # Check if auto mode was selected
+    if [[ "${wallpaper_map[$chosen]}" == "AUTO" ]]; then
+        # Remove any manual selection and run auto mode
+        rm -f "$TEMP_SELECTION_FILE"
+        auto_wallpaper
+        exit 0
+    fi
+    
     # Get full path from the mapping
     wallpaper_path="${wallpaper_map[$chosen]}"
     
     if [[ -f "$wallpaper_path" ]]; then
+        # Save manual selection to temp file (persists until reboot)
+        echo "$(basename "$wallpaper_path")" > "$TEMP_SELECTION_FILE"
+        
         # Set wallpaper
         set_wallpaper "$wallpaper_path"
         
@@ -202,8 +375,8 @@ if [[ -n "$chosen" ]]; then
         sleep 2
         kill $msg_pid 2>/dev/null
         
-        echo "Applied: $chosen"
-        echo "Colors updated for rofi themes"
+        notify-send "Wallpaper" "Applied: $chosen (manual selection saved)" -t 1000
+        notify-send "Rofi" "Colors updated for rofi themes" -t 500
     else
         echo "Wallpaper file not found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
     fi

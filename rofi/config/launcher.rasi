@@ -74,8 +74,8 @@ mainbox {
 
 element {
     background-color:               @BG;
-    border-color:          	    @BG-A;
-    border: 			    2px;
+    border-color:          	        @BG-A;
+    border: 			            2px;
     text-color:                     @FG;
     orientation:                    vertical;
     border-radius:                  12px;
