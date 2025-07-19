@@ -242,6 +242,7 @@ clone_configs_and_fonts() {
     cp -r polybar ~/.config/
     cp -r rofi ~/.config/
     cp -r picom ~/.config/
+    cp -r neofetch ~/.config/
     cp -r betterlockscreen ~/.config/
     #cp -r .zsh ~/
     cp -r .zshrc ~/
