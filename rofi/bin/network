@@ -26,11 +26,10 @@ else
 fi
 
 # Options (no icons)
-bmon="Open Bandwidth Monitor"
 launch_cli="Open Network Manager (nmtui)"
 launch="Open Connection Editor"
 
-options="$connected\n$bmon\n$launch_cli\n$launch"
+options="$connected\n$launch_cli\n$launch"
 
 # Main
 chosen="$(echo -e "$options" | $rofi_command -p "$SSID : $PIP" -dmenu $active $urgent -selected-row 1)"
@@ -41,9 +40,6 @@ case $chosen in
 		else
 			nmcli radio wifi on
 		fi 
-        ;;
-    $bmon)
-        kitty -e bmon
         ;;
     $launch_cli)
         kitty -e nmtui

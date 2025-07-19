@@ -1,0 +1,256 @@
+#!/usr/bin/env bash
+
+rofi_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/wifi.rasi"
+rofi_input_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/wifi-input.rasi"
+
+wifi_status() {
+    flag=$(cat /sys/class/net/wl*/flags 2>/dev/null || echo "0x1002")
+    if [ "$flag" = "0x1003" ]; then
+        echo "on"
+    else
+        echo "off"
+    fi
+}
+
+connected_network() {
+    state=$(cat /sys/class/net/wl*/operstate 2>/dev/null || echo "down")
+    if [ "$state" = "up" ]; then
+        nmcli -t -f active,ssid dev wifi | grep '^yes:' | cut -d: -f2
+    else
+        echo ""
+    fi
+}
+
+available_networks() {
+    # Get networks in simple format: SSID with security info stored separately
+    nmcli -t -f SSID,SECURITY device wifi list | while IFS=':' read -r ssid security; do
+        # Only skip completely empty SSIDs or "--" entries
+        if [[ -n "$ssid" && "$ssid" != "--" ]]; then
+            if [[ -n "$security" && "$security" != "--" && "$security" != "" ]]; then
+                echo "$ssid|SECURED"
+            else
+                echo "$ssid|OPEN"
+            fi
+        fi
+    done | sort -u | head -15
+}
+
+wifi_state=$(wifi_status)
+if [[ "$wifi_state" == "on" ]]; then
+    wifi_toggle="󰖪  Turn Off WiFi"
+    wifi_is_on=1
+    active="-a 0"
+    urgent=""
+else
+    wifi_toggle="󰖩  Turn On WiFi"
+    wifi_is_on=0
+    active=""
+    urgent="-u 0"
+fi
+
+# Main menu options
+scan_networks_btn="󰐗  Scan Networks" 
+manual_connect_btn="󰤥  Connect Manually"
+
+# Get connected network for main menu
+connected=$(connected_network)
+main_menu_options="$wifi_toggle\n$scan_networks_btn\n$manual_connect_btn"
+
+if [[ -n "$connected" ]]; then
+    main_menu_options="$main_menu_options\n--- Connected Network ---\n$connected"
+fi
+
+chosen="$(echo -e "$main_menu_options" | $rofi_command -p "WiFi" -dmenu $active $urgent -selected-row 0 -no-custom)"
+
+case "$chosen" in
+    "$wifi_toggle")
+        if [[ $wifi_is_on -eq 1 ]]; then
+            nmcli radio wifi off
+            echo "WiFi turned off" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+            msg_pid=$!
+            sleep 2
+            kill $msg_pid 2>/dev/null
+        else
+            nmcli radio wifi on
+            echo "WiFi turned on" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+            msg_pid=$!
+            sleep 2
+            kill $msg_pid 2>/dev/null
+        fi
+        ;;
+    "$scan_networks_btn")
+        if [[ "$wifi_state" != "on" ]]; then
+            echo "Please turn on WiFi first" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+            error_pid=$!
+            sleep 2
+            kill $error_pid 2>/dev/null
+            exit 1
+        fi
+        
+        # Show scanning message in rofi
+        echo "Scanning for networks..." | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+        scan_pid=$!
+        
+        nmcli device wifi rescan
+        sleep 3
+        
+        # Kill scanning message
+        kill $scan_pid 2>/dev/null
+        
+        networks=$(available_networks)
+        
+        # Extract just the SSID names for display
+        display_networks=$(echo "$networks" | cut -d'|' -f1)
+        
+        if [[ -z "$display_networks" ]]; then
+            display_networks="No networks found\nScan Again"
+        else
+            display_networks="$display_networks\n--- Options ---\nScan Again"
+        fi
+        
+        network_chosen="$(echo -e "$display_networks" | $rofi_command -p "Available Networks" -dmenu -selected-row 0 -no-custom)"
+        
+        if [[ "$network_chosen" == "Scan Again" ]]; then
+            # Show scanning message in rofi
+            echo "Scanning for networks..." | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+            scan_pid=$!
+            
+            nmcli device wifi rescan
+            sleep 4
+            
+            # Kill scanning message
+            kill $scan_pid 2>/dev/null
+            
+            # Get new networks and show them
+            networks=$(available_networks)
+            
+            # Extract just the SSID names for display
+            display_networks=$(echo "$networks" | cut -d'|' -f1)
+            
+            if [[ -z "$display_networks" ]]; then
+                display_networks="No networks found\nScan Again"
+            else
+                display_networks="$display_networks\n--- Options ---\nScan Again"
+            fi
+            
+            network_chosen="$(echo -e "$display_networks" | $rofi_command -p "Available Networks" -dmenu -selected-row 0 -no-custom)"
+        fi
+        
+        if [[ "$network_chosen" != "Scan Again" ]] && [[ "$network_chosen" != *"---"* ]] && [[ "$network_chosen" != "No networks found" ]] && [[ -n "$network_chosen" ]]; then
+            # The wifi name is already clean
+            wifi_name="$network_chosen"
+            
+            # Check if secured network by looking up in original networks data
+            security_info=$(echo "$networks" | grep "^$wifi_name|" | cut -d'|' -f2)
+            
+            if [[ "$security_info" == "SECURED" ]]; then
+                # Ask for password - using input theme for visible password entry with instruction on first line
+                password=$(echo -e "Enter password for $wifi_name:\n" | $rofi_input_command -dmenu -p " ")
+                
+                if [[ -n "$password" ]]; then
+                    # Show connecting message in rofi
+                    echo "Connecting to $wifi_name..." | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    connect_pid=$!
+                    
+                    if nmcli dev wifi con "$wifi_name" password "$password" 2>/dev/null; then
+                        kill $connect_pid 2>/dev/null
+                        sleep 1
+                        # Show success message in rofi
+                        echo "Connected to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                        success_pid=$!
+                        sleep 3
+                        kill $success_pid 2>/dev/null
+                    else
+                        kill $connect_pid 2>/dev/null
+                        sleep 1
+                        # Show error message in rofi
+                        echo "Wrong password for $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                        error_pid=$!
+                        sleep 3
+                        kill $error_pid 2>/dev/null
+                    fi
+                fi
+            else
+                # Open network
+                # Show connecting message in rofi
+                echo "Connecting to $wifi_name..." | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                connect_pid=$!
+                
+                if nmcli dev wifi con "$wifi_name" 2>/dev/null; then
+                    kill $connect_pid 2>/dev/null
+                    sleep 1
+                    # Show success message in rofi
+                    echo "Connected to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    success_pid=$!
+                    sleep 3
+                    kill $success_pid 2>/dev/null
+                else
+                    kill $connect_pid 2>/dev/null
+                    sleep 1
+                    # Show error message in rofi
+                    echo "Failed to connect to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    error_pid=$!
+                    sleep 3
+                    kill $error_pid 2>/dev/null
+                fi
+            fi
+        fi
+        ;;
+    "$manual_connect_btn")
+        wifi_name=$(echo "" | $rofi_input_command -dmenu -p "Enter WiFi Name")
+        
+        if [[ -n "$wifi_name" ]]; then
+            password=$(echo -e "Enter password for $wifi_name:\n(leave empty for open network)" | $rofi_input_command -dmenu -p " ")
+            
+            # Show connecting message in rofi
+            echo "Connecting to $wifi_name..." | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+            connect_pid=$!
+            
+            if [[ -n "$password" ]]; then
+                if nmcli dev wifi con "$wifi_name" password "$password" 2>/dev/null; then
+                    kill $connect_pid 2>/dev/null
+                    sleep 1
+                    echo "Connected to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    success_pid=$!
+                    sleep 3
+                    kill $success_pid 2>/dev/null
+                else
+                    kill $connect_pid 2>/dev/null
+                    sleep 1
+                    echo "Wrong password or failed to connect to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    error_pid=$!
+                    sleep 3
+                    kill $error_pid 2>/dev/null
+                fi
+            else
+                if nmcli dev wifi con "$wifi_name" 2>/dev/null; then
+                    kill $connect_pid 2>/dev/null
+                    sleep 1
+                    echo "Connected to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    success_pid=$!
+                    sleep 3
+                    kill $success_pid 2>/dev/null
+                else
+                    kill $connect_pid 2>/dev/null
+                    sleep 1
+                    echo "Failed to connect to $wifi_name" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                    error_pid=$!
+                    sleep 3
+                    kill $error_pid 2>/dev/null
+                fi
+            fi
+        fi
+        ;;
+    *)
+        # Handle connected network clicked from main menu - disconnect it
+        if [[ "$chosen" != *"---"* ]] && [[ -n "$chosen" ]]; then
+            if echo "$connected" | grep -q "^$chosen$"; then
+                nmcli connection down "$chosen"
+                echo "Disconnected from $chosen" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                msg_pid=$!
+                sleep 2
+                kill $msg_pid 2>/dev/null
+            fi
+        fi
+        ;;
+esac

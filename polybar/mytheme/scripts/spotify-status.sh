@@ -14,4 +14,3 @@ elif [[ $playerctlstatus == "Playing" ]]; then
 else
     echo " %{A1:playerctl play:} %{A} paused "  # Paused
 fi
-

@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+
+# Wallpaper selector with predefined colors
+rofi_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/wifi.rasi"
+
+# Wallpaper directory
+WALLPAPER_DIR="$HOME/.config/polybar/Wallpaper"
+COLORS_FILE="$HOME/.config/rofi/config/colors.rasi"
+
+# Function to set colors for a specific wallpaper
+set_wallpaper_colors() {
+    local wallpaper_name="$1"
+    
+    case "$wallpaper_name" in
+        "night-time.jpeg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Night Time Theme */
+* {
+    BG:    #0a0a0aff;
+    BGA:   #1a1a2eff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #4c4c7eff;
+    SEL:   #0a0a0aff;
+    UGT:   #ff6b6bff;
+    IMG:   #4c4c7eff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+}
+EOF
+            ;;
+        "goku.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Goku Theme */
+* {
+    BG:    #3399FF;
+    BGA:   #ff6b35ff;
+    FG:    #ffffffff;
+    FGA:   #ffffffff;
+    BDR:   #ff6b35ff;
+    SEL:   #1a1a1aff;
+    UGT:   #ffab40ff;
+    IMG:   #ff6b35ff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+}
+EOF
+            ;;
+        "studio-ghibli.png")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Studio Ghibli Theme */
+* {
+    BG:    #212232;
+    BGA:   #63b4e3;
+    FG:    #FFFFFF;
+    FGA:   #FFFFFF;
+    BDR:   #CBA6F7;
+    SEL:   #FFFFFF;
+    UGT:   #F28FAD;
+    IMG:   #FAE3B0;
+    OFF:   #575268;
+    ON:    #ABE9B3;
+    BG-A:  #313244;
+EOF
+            ;;
+        "earth.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Earth Theme */
+* {
+    BG:    #1b2631ff;
+    BGA:   #3498dbff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #3498dbff;
+    SEL:   #1b2631ff;
+    UGT:   #e74c3cff;
+    IMG:   #3498dbff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+}
+EOF
+            ;;
+        "yourname.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Your Name Theme */
+* {
+    BG:    #212232;
+    BGA:   #63b4e3;
+    FG:    #FFFFFF;
+    FGA:   #FFFFFF;
+    BDR:   #CBA6F7;
+    SEL:   #FFFFFF;
+    UGT:   #F28FAD;
+    IMG:   #FAE3B0;
+    OFF:   #575268;
+    ON:    #ABE9B3;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+        "pixel.png")
+            cat > "$COLORS_FILE" << 'EOF'
+/* Pixel Theme */
+* {
+    BG:    #1a1a1aff;
+    BGA:   #ff6b9dff;
+    FG:    #ffffffff;
+    FGA:   #ffffffcc;
+    BDR:   #ff6b9dff;
+    SEL:   #1a1a1aff;
+    UGT:   #ff4081ff;
+    IMG:   #ff6b9dff;
+    OFF:   #666666ff;
+    ON:    #00ff00ff;
+}
+EOF
+            ;;
+        *)
+            # Default theme - your custom colors
+            cat > "$COLORS_FILE" << 'EOF'
+/* Default Theme - Custom Colors */
+* {
+    BG:    #212232;
+    BGA:   #63b4e3;
+    FG:    #FFFFFF;
+    FGA:   #FFFFFF;
+    BDR:   #CBA6F7;
+    SEL:   #FFFFFF;
+    UGT:   #F28FAD;
+    IMG:   #FAE3B0;
+    OFF:   #575268;
+    ON:    #ABE9B3;
+    BG-A:  #313244;
+}
+EOF
+            ;;
+    esac
+}
+
+# Function to set wallpaper
+set_wallpaper() {
+    local wallpaper_path="$1"
+    
+    # Set wallpaper using nitrogen
+    nitrogen --set-zoom-fill "$wallpaper_path" 2>/dev/null
+    
+    # For other wallpaper setters, uncomment the one you use:
+    # feh --bg-scale "$wallpaper_path" 2>/dev/null
+    # swaybg -i "$wallpaper_path" -m fill &
+    # gsettings set org.gnome.desktop.background picture-uri "file://$wallpaper_path"
+}
+
+# Get available wallpapers
+if [[ ! -d "$WALLPAPER_DIR" ]]; then
+    echo "Wallpaper directory not found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
+    exit 1
+fi
+
+wallpapers=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | sort)
+
+if [[ -z "$wallpapers" ]]; then
+    echo "No wallpapers found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
+    exit 1
+fi
+
+# Create menu with just filenames without extensions
+menu_options=""
+declare -A wallpaper_map  # Associate display names with full paths
+
+while IFS= read -r wallpaper; do
+    filename=$(basename "$wallpaper")
+    # Remove extension from display name
+    display_name="${filename%.*}"
+    menu_options="$menu_options$display_name\n"
+    # Map display name to full path
+    wallpaper_map["$display_name"]="$wallpaper"
+done <<< "$wallpapers"
+
+# Remove trailing newline
+menu_options=${menu_options%\\n}
+
+# Show rofi menu
+chosen=$(echo -e "$menu_options" | $rofi_command -p "Select Wallpaper" -dmenu -selected-row 0 -no-custom)
+
+if [[ -n "$chosen" ]]; then
+    # Get full path from the mapping
+    wallpaper_path="${wallpaper_map[$chosen]}"
+    
+    if [[ -f "$wallpaper_path" ]]; then
+        # Set wallpaper
+        set_wallpaper "$wallpaper_path"
+        
+        # Get original filename with extension for color matching
+        original_filename=$(basename "$wallpaper_path")
+        
+        # Set corresponding colors using original filename
+        set_wallpaper_colors "$original_filename"
+        
+        # Show success message
+        echo "Wallpaper and colors updated!" | $rofi_command -p "Success" -dmenu -no-custom -selected-row 0 &
+        msg_pid=$!
+        sleep 2
+        kill $msg_pid 2>/dev/null
+        
+        echo "Applied: $chosen"
+        echo "Colors updated for rofi themes"
+    else
+        echo "Wallpaper file not found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
+    fi
+fi

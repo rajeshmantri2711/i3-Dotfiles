@@ -39,7 +39,7 @@ case "$1" in
         toggle_bluetooth
         ;;
     right)
-        blueman-manager  # Open Bluetooth Manager (BlueMan)
+        ~/.config/rofi/bin/bluetooth
         ;;
 esac
 

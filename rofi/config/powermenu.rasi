@@ -22,19 +22,22 @@ window {
     border-radius:                  12px;
     border-color:                   @BGA;
     width:                          30%;  /* Adjust width as needed */
-    height:                         10%;  /* Adjust height as needed */
+    height:                         16%;  /* Adjust height as needed */
     x-offset:                       -50%;
     anchor:                         center;
 }
 
 prompt {
     enabled:                        true;
-    margin:                         0px 0px 0px 8px;
-    padding:                        8px;
+    margin:                         0px 0px 8px 0px;
+    padding:                        12px;
     background-color:               @BG;
     text-color:                     @FG;
-    border:                         0px 0px 2px 0px;
+    border:                         1px;
+    border-radius:                  8px;
     border-color:                   @BDR;
+    font:                          "Work Sans Medium 14";
+    horizontal-align:               0.5;
 }
 
 textbox-prompt-colon {
@@ -87,11 +90,14 @@ listview {
     cycle:                          true;
     dynamic:                        true;
     layout:                         horizontal;
+    fixed-height:                   true;
+    reverse:                        false;
+    scrollbar:                      false;
 }
 
 mainbox {
     background-color:               @BG;
-    children:                       [ listview ];
+    children:                       [ prompt, listview ];
     spacing:                        15px;
     padding:                        15px;
 }

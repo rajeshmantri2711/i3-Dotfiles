@@ -16,7 +16,7 @@ window {
     background-color:               @BG;
     text-color:                     @FG;
     width:                          700px;
-    height:			    50%;
+    height:			                  42%;
     location:                       center;
 }
 
@@ -24,7 +24,7 @@ window {
 entry {
     background-color:               @BG;
     text-color:                     @FG;
-    placeholder-color:              @BGA;
+    placeholder-color:              @FG;
     expand:                         true;
     horizontal-align:               0;
     placeholder:                    "  Search";
@@ -58,8 +58,8 @@ case-indicator {
 listview {
     background-color:               @BG;
     columns:                        3;
-    lines:			    8;
-    spacing:                        12px;
+    lines:			    4;
+    spacing:                        15px;
     cycle:                          true;
     dynamic:                        true;
     layout:                         vertical;
@@ -77,9 +77,9 @@ element {
     border-color:          	    @BG-A;
     border: 			    2px;
     text-color:                     @FG;
-    orientation:                    horizontal;
-    border-radius:                  8px;
-    padding:                        10px 10px 10px 10px;
+    orientation:                    vertical;
+    border-radius:                  12px;
+    padding:                        15px 10px 15px 10px;
 }
 
 element-icon {
@@ -87,17 +87,19 @@ element-icon {
     text-color:       		        inherit;
     horizontal-align:               0.5;
     vertical-align:                 0.5;
-    size:                           32px;
+    size:                           36px;
     border:                         0px;
+    margin:                         0px 0px 8px 0px;
 }
 
 element-text {
     background-color: 		        inherit;
     text-color:       		        inherit;
     expand:                         true;
-    horizontal-align:               0;
+    horizontal-align:               0.5;
     vertical-align:                 0.5;
-    margin:                         2px 0px 2px 2px;
+    margin:                         0px;
+    font:                          "JetBrainsMono Nerd Font 11";
 }
 
 element normal.urgent,
