@@ -38,7 +38,8 @@ bindsym $mod+q exec --no-startup-id ~/.config/rofi/bin/powermenu
 bindsym Print exec --no-startup-id ~/.config/rofi/bin/screenshot
 #bindsym $mod+Shift+s exec --no-startup-id gnome-screenshot
 bindsym $mod+z exec --no-startup-id ~/.config/rofi/bin/runner
-bindsym $mod+Shift+a exec --no-startup-id ~/.config/rofi/bin/network
+bindsym $mod+a exec --no-startup-id ~/.config/rofi/bin/options-menu
+bindsym $mod+Shift+w exec --no-startup-id ~/.config/rofi/bin/wallpaper-selector
 bindsym $mod+e exec --no-startup-id thunar
 #bindsm  $mod+v exec --no-startup-id /usr/bin/diodon
 bindsym $mod+v exec --no-startup-id rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme ~/.config/rofi/config/clipboard.rasi
@@ -92,7 +93,7 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+#bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -182,7 +183,7 @@ gaps top 42
 # Border in windows / Disable TitleBar
 for_window [class="^.*"] border pixel 3
 #exec_always --no-startup-id nitrogen --set-zoom-fill /mnt/sda5/wallpaper/wale/ghostrunner.jpg
-exec_always --no-startup-id nitrogen --restore
+#exec_always --no-startup-id nitrogen --restore
 #play/pause
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
@@ -219,8 +220,9 @@ exec --no-startup-id picom --experimental-backends
 #exec_always --no-startup-id sh ~/Bin/batnotify.sh
 exec_always --no-startup-id $HOME/.config/polybar/mytheme/launch.sh
 #exec_always --no-startup-id feh --bg-fill $HOME/scripts/kyojuro-rengoku.jpg
-exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf --experimental-backends
 # --no-vsync
 exec_always --no-startup-id ~/.config/polybar/mytheme/scripts/alternating_layouts.py
 exec_always --no-startup-id greenclip daemon &
+exec_always --no-startup-id ~/.config/rofi/bin/auto-wallpaper
 

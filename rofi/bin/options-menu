@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Options menu script
+rofi_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/options-menu.rasi"
+
+# Options array
+options=(
+    "Bluetooth"
+    "WiFi"
+    "Network"
+    "Mount/Unmount"
+    "Record Screen"
+    "Spotify"
+)
+
+# Show menu
+chosen=$(printf '%s\n' "${options[@]}" | $rofi_command -p "Options" -dmenu -selected-row 0)
+
+# Handle selection
+case $chosen in
+    "Bluetooth")
+        # Launch rofi bluetooth menu
+        $HOME/.config/rofi/bin/bluetooth &
+        ;;
+    "WiFi")
+        # Launch rofi wifi menu
+        $HOME/.config/rofi/bin/wifi &
+        ;;
+    "Network")
+        # Launch rofi network menu
+        $HOME/.config/rofi/bin/network &
+        ;;
+    "Mount/Unmount")
+        # Launch rofi mount menu
+        $HOME/.config/rofi/bin/mount-usb &
+        ;;
+    "Record Screen")
+        # Launch SimpleScreenRecorder
+        simplescreenrecorder &
+        ;;
+    "Spotify")
+        # Launch Spotify
+        spotify &
+        ;;
+esac

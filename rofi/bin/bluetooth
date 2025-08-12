@@ -28,13 +28,13 @@ available_devices() {
 
 bt_state=$(bt_status)
 if [[ "$bt_state" == "yes" ]]; then
-    bt_toggle="󰂯  Turn off Bluetooth"
+    bt_toggle="󰂯 Bluetooth is on"
     bt_status_text=""
     bt_is_on=1
     active="-a 0"
     urgent=""
 else
-    bt_toggle="󰂮  Turn on Bluetooth"
+    bt_toggle="󰂲 Bluetooth is off"
     bt_status_text=""
     bt_is_on=0
     active=""
@@ -53,14 +53,57 @@ if [[ -n "$connected" ]]; then
     main_menu_options="$main_menu_options\n--- Connected Devices ---\n$connected"
 fi
 
-chosen="$(echo -e "$main_menu_options" | $rofi_command -p "$bt_status_text" -dmenu $active $urgent -selected-row 0)"
+chosen="$(echo -e "$main_menu_options" | $rofi_command -p "$bt_status_text" -dmenu $active $urgent -selected-row 1)"
 
 case "$chosen" in
     "$bt_toggle")
         if [[ $bt_is_on -eq 1 ]]; then
             bluetoothctl power off
         else
+            # Turn on Bluetooth
             bluetoothctl power on
+            
+            # Show scanning message in rofi
+            echo "Bluetooth turned on. Checking for saved devices..." | $rofi_command -p "Bluetooth" -dmenu -no-custom &
+            rofi_pid=$!
+            
+            # Give time for auto-connection
+            sleep 5
+            kill $rofi_pid 2>/dev/null
+
+            # Check status again and show final message
+            final_connected_devices=$(connected_devices)
+            if [[ -n "$final_connected_devices" ]]; then
+                 echo "Connected to: $final_connected_devices" | $rofi_command -p "Bluetooth" -dmenu -no-custom &
+                 final_rofi_pid=$!
+                 sleep 2
+                 kill $final_rofi_pid 2>/dev/null
+            else
+                # No devices connected automatically, show available devices
+                available=$(available_devices)
+                if [[ -n "$available" ]]; then
+                    device_chosen="$(echo -e "$available" | $rofi_command -p "Connect to" -dmenu)"
+                    if [[ -n "$device_chosen" ]]; then
+                        mac=$(bluetoothctl devices | while read -r device; do
+                            device_mac=$(echo "$device" | awk '{print $2}')
+                            device_name=$(echo "$device" | awk '{for(i=3;i<=NF;i++) printf "%s ", $i; print ""}' | sed 's/ $//')
+                            if [[ "$device_name" == "$device_chosen" ]]; then
+                                echo "$device_mac"
+                                break
+                            fi
+                        done)
+                        
+                        if [[ -n "$mac" ]]; then
+                            bluetoothctl connect "$mac"
+                        fi
+                    fi
+                else
+                    echo "No saved devices found to connect to." | $rofi_command -p "Bluetooth" -dmenu -no-custom &
+                    final_rofi_pid=$!
+                    sleep 2
+                    kill $final_rofi_pid 2>/dev/null
+                fi
+            fi
         fi
         ;;
     "$paired_devices_btn")

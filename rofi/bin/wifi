@@ -60,7 +60,7 @@ if [[ -n "$connected" ]]; then
     main_menu_options="$main_menu_options\n--- Connected Network ---\n$connected"
 fi
 
-chosen="$(echo -e "$main_menu_options" | $rofi_command -p "WiFi" -dmenu $active $urgent -selected-row 0 -no-custom)"
+chosen="$(echo -e "$main_menu_options" | $rofi_command -p "WiFi" -dmenu $active $urgent -selected-row 1 -no-custom)"
 
 case "$chosen" in
     "$wifi_toggle")
@@ -71,11 +71,60 @@ case "$chosen" in
             sleep 2
             kill $msg_pid 2>/dev/null
         else
+            # Turn on WiFi
             nmcli radio wifi on
-            echo "WiFi turned on" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
-            msg_pid=$!
+            
+            # Show scanning message in rofi
+            echo "WiFi turned on. Scanning for saved networks..." | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+            scan_pid=$!
+            
+            # Give the radio a moment to come up
             sleep 2
-            kill $msg_pid 2>/dev/null
+
+            # Rescan and let NetworkManager try to autoconnect
+            nmcli device wifi rescan
+            
+            # Wait for connection attempt
+            sleep 5
+            
+            # Kill the scanning message
+            kill $scan_pid 2>/dev/null
+
+            # Check connection status and show final message
+            connected_ssid=$(connected_network)
+            if [[ -n "$connected_ssid" ]]; then
+                echo "Connected to $connected_ssid" | $rofi_command -p "WiFi" -dmenu -no-custom -selected-row 0 &
+                msg_pid=$!
+                sleep 2
+                kill $msg_pid 2>/dev/null
+            else
+                # No saved networks connected, show available networks to connect
+                networks=$(available_networks)
+                display_networks=$(echo "$networks" | cut -d'|' -f1)
+
+                if [[ -n "$display_networks" ]]; then
+                    network_chosen="$(echo -e "$display_networks" | $rofi_command -p "Connect to" -dmenu)"
+                    
+                    if [[ -n "$network_chosen" ]]; then
+                        wifi_name="$network_chosen"
+                        security_info=$(echo "$networks" | grep "^$wifi_name|" | cut -d'|' -f2)
+
+                        if [[ "$security_info" == "SECURED" ]]; then
+                            password=$(echo -e "Enter password for $wifi_name:\n" | $rofi_input_command -dmenu -p " ")
+                            if [[ -n "$password" ]]; then
+                                nmcli dev wifi con "$wifi_name" password "$password"
+                            fi
+                        else
+                            nmcli dev wifi con "$wifi_name"
+                        fi
+                    fi
+                else
+                    echo "No networks found to connect to." | $rofi_command -p "WiFi" -dmenu -no-custom &
+                    msg_pid=$!
+                    sleep 2
+                    kill $msg_pid 2>/dev/null
+                fi
+            fi
         fi
         ;;
     "$scan_networks_btn")

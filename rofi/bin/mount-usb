@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+# This script uses Rofi to mount and unmount removable devices.
+# It uses lsblk for device info and udisksctl for mounting/unmounting.
+
+rofi_theme="/home/raj/.config/rofi/config/mount.rasi"
+
+# Function to show a message in Rofi.
+# -e is used to display a message without showing an input bar.
+show_message() {
+    rofi -e "$1" -p "$2" -theme "$rofi_theme"
+}
+
+# Get full device info in JSON format to use later
+all_devices_json=$(lsblk -J -o NAME,LABEL,SIZE,MOUNTPOINT,RM)
+
+# Create the menu options from the JSON data
+device_list=$(echo "$all_devices_json" | jq -r '
+  .blockdevices[] |
+  select(.rm == true) |
+  .children[]? |
+  if .mountpoint != null then
+    "\(.label // .name) (\(.size)) [Mounted]"
+  else
+    "\(.label // .name) (\(.size)) [Not Mounted]"
+  end
+')
+
+# Check if any removable devices were found
+if [[ -z "$device_list" ]]; then
+  show_message "No removable devices found." "System"
+  exit 0
+fi
+
+# Show the list in Rofi and get the user's choice
+chosen=$(echo -e "$device_list" | rofi -dmenu -p "Mount/Unmount" -theme "$rofi_theme")
+
+# If the user cancelled (e.g., pressed Esc), exit
+if [[ -z "$chosen" ]]; then
+    exit 0
+fi
+
+# Extract the display name by removing the size and status part.
+# This correctly handles labels with spaces.
+display_name=$(echo "$chosen" | sed -E 's/ \(.+\) \[.+\]//')
+
+# Find the corresponding device path (e.g., /dev/sdb1) from the display name
+target_device_path=$(echo "$all_devices_json" | jq -r --arg name "$display_name" '
+  .blockdevices[] |
+  select(.rm == true) |
+  .children[]? |
+  select((.label == $name) or (.name == $name)) |
+  "/dev/\(.name)"
+')
+
+# Check if we found a valid device path
+if [[ -z "$target_device_path" ]]; then
+    show_message "Could not find device path for '$display_name'" "Error"
+    exit 1
+fi
+
+# Perform mount or unmount based on the chosen string
+if echo "$chosen" | grep -q "\[Mounted\]"; then
+    # Unmount the device
+    if udisksctl unmount -b "$target_device_path"; then
+        show_message "'$display_name' has been unmounted." "Success"
+    else
+        show_message "Failed to unmount '$display_name'." "Error"
+    fi
+else
+    # Mount the device
+    if udisksctl mount -b "$target_device_path"; then
+        show_message "'$display_name' has been mounted." "Success"
+    else
+        show_message "Failed to mount '$display_name'." "Error"
+    fi
+fi
+
