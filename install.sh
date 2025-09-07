@@ -144,7 +144,7 @@ install_clipboard_tools() {
     wget -q --show-progress https://github.com/erebe/greenclip/releases/latest/download/greenclip -O greenclip
     chmod +x greenclip
     sudo mv greenclip /usr/local/bin/
-    pip3 install --user i3ipc
+    pip3 install --user i3ipc --break-system-packages
     echo " Greenclip and i3ipc installed successfully."
 }
 
