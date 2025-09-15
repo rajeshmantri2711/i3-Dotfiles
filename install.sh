@@ -170,8 +170,8 @@ install_packages_debian() {
     echo " Installing required Debian packages..."
     sudo apt update
     sudo apt install -y \
-    rofi kitty terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
-    notify-osd i3-wm i3status i3lock suckless-tools neofetch \
+    rofi kitty polybar terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
+    notify-osd i3-wm i3status i3lock suckless-tools \
     libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev \
     libxcb-util0-dev libxcb-icccm4-dev libyajl-dev \
     libev-dev libxcb-xkb-dev libxcb-cursor-dev \
@@ -208,7 +208,6 @@ clone_configs_and_fonts() {
     cp -r polybar ~/.config/
     cp -r rofi ~/.config/
     cp -r picom ~/.config/
-    cp -r neofetch ~/.config/
     cp -r betterlockscreen ~/.config/
     cp -r .zshrc ~/
     cd ~/DotFiles 
