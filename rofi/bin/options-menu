@@ -9,7 +9,9 @@ options=(
     "WiFi"
     "Network"
     "Mount/Unmount"
-    "Record Screen"
+    "Start Recording"
+    "Stop Recording"
+    "Screenshot"
     "Spotify"
 )
 
@@ -34,9 +36,17 @@ case $chosen in
         # Launch rofi mount menu
         $HOME/.config/rofi/bin/mount-usb &
         ;;
-    "Record Screen")
-        # Launch SimpleScreenRecorder
-        simplescreenrecorder &
+    "Start Recording")
+        # Start screen recording
+        $HOME/.config/rofi/bin/screen_recorder.sh start &
+        ;;
+    "Stop Recording")
+        # Stop screen recording
+        $HOME/.config/rofi/bin/screen_recorder.sh stop &
+        ;;
+    "Screenshot")
+        # Launch screenshot script
+        $HOME/.config/rofi/bin/screenshot &
         ;;
     "Spotify")
         # Launch Spotify
