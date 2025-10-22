@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Wallpaper selector with predefined colors and automatic time-based selection
-rofi_command="rofi -no-fixed-num-lines -theme $HOME/.config/rofi/config/wallpaper-grid.rasi"
+rofi_command="rofi -no-fixed-num-lines -show-icons -markup-rows -theme $HOME/.config/rofi/config/wallpaper-grid.rasi"
 
 # Wallpaper directory
 WALLPAPER_DIR="$HOME/.config/polybar/Wallpaper"
@@ -10,40 +10,31 @@ TEMP_SELECTION_FILE="/tmp/wallpaper_selection"
 
 # Function for automatic wallpaper based on time
 auto_wallpaper() {
-    # Check if user has manually selected a wallpaper
     if [[ -f "$TEMP_SELECTION_FILE" ]]; then
         manual_selection=$(cat "$TEMP_SELECTION_FILE")
         wallpaper_path="$WALLPAPER_DIR/$manual_selection"
-        
+
         if [[ -f "$wallpaper_path" ]]; then
             wallpaper_name="$manual_selection"
             set_wallpaper "$wallpaper_path"
             set_wallpaper_colors "$wallpaper_name"
             return 0
         else
-            # Remove invalid selection file
             rm -f "$TEMP_SELECTION_FILE"
         fi
     fi
-    
+
     current_hour=$(date +%H)
-    
-    # Convert to integer for comparison
     current_hour=$((10#$current_hour))
-    
-    # Time-based wallpaper selection:
-    # 6 AM (06:00) to 6 PM (18:00) = white wallpaper (daytime)
-    # 6 PM (18:00) to 6 AM (06:00) = dark wallpaper (nighttime)
+
     if [[ $current_hour -ge 6 && $current_hour -lt 18 ]]; then
-        # Daytime: use white wallpaper
         wallpaper_path="$WALLPAPER_DIR/white.png"
         wallpaper_name="white.png"
     else
-        # Nighttime: use dark wallpaper (18:00-06:00)
         wallpaper_path="$WALLPAPER_DIR/dark.png"
         wallpaper_name="dark.png"
     fi
-    
+
     if [[ -f "$wallpaper_path" ]]; then
         set_wallpaper "$wallpaper_path"
         set_wallpaper_colors "$wallpaper_name"
@@ -57,7 +48,7 @@ auto_wallpaper() {
 # Function to set colors for a specific wallpaper
 set_wallpaper_colors() {
     local wallpaper_name="$1"
-    
+
     case "$wallpaper_name" in
         "goku.jpg")
             cat > "$COLORS_FILE" << 'EOF'
@@ -257,9 +248,8 @@ EOF
 EOF
             ;;
         *)
-            # Default theme - your custom colors
             cat > "$COLORS_FILE" << 'EOF'
-/* Default Theme - Custom Colors */
+/* Default Theme */
 * {
     BG:    #212232;
     BGA:   #63b4e3;
@@ -281,88 +271,50 @@ EOF
 # Function to set wallpaper
 set_wallpaper() {
     local wallpaper_path="$1"
-    
-    # Set wallpaper using nitrogen
-    #nitrogen --set-auto  "$wallpaper_path" 2>/dev/null
-     feh  --bg-fill  "$wallpaper_path" 2>/dev/null
-    # For other wallpaper setters, uncomment the one you use:
-    # feh --bg-scale "$wallpaper_path" 2>/dev/null
-    # swaybg -i "$wallpaper_path" -m fill &
+    feh --bg-fill "$wallpaper_path" 2>/dev/null
 }
 
-# Check if auto mode is requested
+# Auto mode
 if [[ "$1" == "--auto" || "$1" == "-a" ]]; then
     auto_wallpaper
     exit 0
 fi
 
-# Get available wallpapers
+# Ensure wallpaper directory exists
 if [[ ! -d "$WALLPAPER_DIR" ]]; then
     echo "Wallpaper directory not found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
     exit 1
 fi
 
-wallpapers=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | sort)
-
-if [[ -z "$wallpapers" ]]; then
-    echo "No wallpapers found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
-    exit 1
-fi
-
-# Create menu with just filenames without extensions, plus Auto option
-menu_options=" Auto (Time-based)\n"
-declare -A wallpaper_map  # Associate display names with full paths
-
-# Add auto option to map
-wallpaper_map[" Auto (Time-based)"]="AUTO"
+# Generate menu entries with image previews
+menu_options="󰄯  Auto (Time-based)\0icon\x1fclock\n"
+declare -A wallpaper_map
+wallpaper_map["󰄯  Auto (Time-based)"]="AUTO"
 
 while IFS= read -r wallpaper; do
     filename=$(basename "$wallpaper")
-    # Remove extension from display name
     display_name="${filename%.*}"
-    menu_options="$menu_options$display_name\n"
-    # Map display name to full path
+    menu_options+="${display_name}\0icon\x1f${wallpaper}\n"
     wallpaper_map["$display_name"]="$wallpaper"
-done <<< "$wallpapers"
+done <<< "$(find "$WALLPAPER_DIR" -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.jpeg' \) | sort)"
 
-# Remove trailing newline
-menu_options=${menu_options%\\n}
-
-# Show rofi menu
-chosen=$(echo -e "$menu_options" | $rofi_command -p "Select Wallpaper" -dmenu -selected-row 0 -no-custom)
+# Show Rofi menu with previews
+chosen=$(echo -en "$menu_options" | rofi -dmenu -show-icons -markup-rows -p "Select Wallpaper" -theme "$HOME/.config/rofi/config/wallpaper-grid.rasi" -no-custom)
 
 if [[ -n "$chosen" ]]; then
-    # Check if auto mode was selected
     if [[ "${wallpaper_map[$chosen]}" == "AUTO" ]]; then
-        # Remove any manual selection and run auto mode
         rm -f "$TEMP_SELECTION_FILE"
         auto_wallpaper
         exit 0
     fi
-    
-    # Get full path from the mapping
+
     wallpaper_path="${wallpaper_map[$chosen]}"
-    
     if [[ -f "$wallpaper_path" ]]; then
-        # Save manual selection to temp file (persists until reboot)
         echo "$(basename "$wallpaper_path")" > "$TEMP_SELECTION_FILE"
-        
-        # Set wallpaper
         set_wallpaper "$wallpaper_path"
-        
-        # Get original filename with extension for color matching
         original_filename=$(basename "$wallpaper_path")
-        
-        # Set corresponding colors using original filename
         set_wallpaper_colors "$original_filename"
-        
-        # Show success message
-        echo "Wallpaper and colors updated!" | $rofi_command -p "Success" -dmenu -no-custom -selected-row 0 &
-        msg_pid=$!
-        sleep 1
-        kill $msg_pid 2>/dev/null
-        
-        notify-send "Wallpaper" "Applied: $chosen" -t 500
+        notify-send "Wallpaper" "Applied: $chosen" -t 800
     else
         echo "Wallpaper file not found!" | $rofi_command -p "Error" -dmenu -no-custom -selected-row 0
     fi
