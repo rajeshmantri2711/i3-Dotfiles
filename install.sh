@@ -170,7 +170,7 @@ install_packages_debian() {
     echo " Installing required Debian packages..."
     sudo apt update
     sudo apt install -y \
-    rofi kitty polybar terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
+    rofi kitty flameshot polybar terminator build-essential meson ninja-build cmake dh-autoreconf pkg-config python3-pip \
     notify-osd i3-wm i3status i3lock suckless-tools \
     libxcb1-dev libxcb-keysyms1-dev libpango1.0-dev \
     libxcb-util0-dev libxcb-icccm4-dev libyajl-dev \
