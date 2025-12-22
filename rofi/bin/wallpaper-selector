@@ -50,21 +50,39 @@ set_wallpaper_colors() {
     local wallpaper_name="$1"
 
     case "$wallpaper_name" in
-        "goku.jpg")
+        "black.jpg")
             cat > "$COLORS_FILE" << 'EOF'
-/* Goku Theme */
+/* black Theme */
 * {
-    BG:    #ffffffff;
-    BGA:   #4da6ffff;
-    FG:    #000000ff;
-    FGA:   #000000ff;
-    BDR:   #006600ff;
-    SEL:   #ffffffff;
-    UGT:   #ffab40ff;
-    IMG:   #4da6ffff;
-    OFF:   #666666ff;
-    ON:    #006600ff;
-    BG-A:  #313244;
+    BG:    #252525;        /* background color */
+    BGA:   #606060;        /* the selector color */
+    FG:    #ffffff;        /* unselected text color */
+    SEL:   #ffffff;        /* selected text color */
+    BDR:   #c4c1c1;        /* search border color */
+    BG-A:  #c4c1c1;        /* element border color */
+    OFF:   #666666;        /* off color */
+    ON:    #00ff00;        /* on color */
+    FGA:   #FC1100;        /* focused text accent */
+    IMG:   #4da6ff;        /* image/icon color */
+    UGT:   #e67e22;        /* urgent color */
+}
+EOF
+            ;;
+        "cherry.jpg")
+            cat > "$COLORS_FILE" << 'EOF'
+/* cherry Theme */
+* {
+    BG:    #252525;        /* background color */
+    BGA:   #E1B2BB;        /* the selector color */
+    FG:    #ffffff;        /* unselected text color */
+    SEL:   #ffffff;        /* selected text color */
+    BDR:   #D9A8B0;        /* search border color */
+    BG-A:  #D9A8B0;        /* element border color */
+    OFF:   #666666;     /* off color */
+    ON:    #00ff00;        /* on color */
+    FGA:   #FC1100;        /* focused text accent */
+    IMG:   #4da6ff;        /* image/icon color */
+    UGT:   #e67e22;        /* urgent color */
 }
 EOF
             ;;
@@ -72,89 +90,35 @@ EOF
             cat > "$COLORS_FILE" << 'EOF'
 /* Studio Ghibli Theme */
 * {
-    BG:    #212232;
-    BGA:   #63b4e3;
-    FG:    #FFFFFF;
-    FGA:   #FFFFFF;
-    BDR:   #CBA6F7;
-    SEL:   #FFFFFF;
-    UGT:   #F28FAD;
-    IMG:   #FAE3B0;
-    OFF:   #575268;
-    ON:    #00ff00;
-    BG-A:  #313244;
+    BG:    #252525;        /* background color */
+    BGA:   #63b4e3;        /* the selector color */
+    FG:    #ffffff;        /* unselected text color */
+    SEL:   #ffffff;        /* selected text color */
+    BDR:   #c4c1c1;        /* search border color */
+    BG-A:  #313244;        /* element border color */
+    OFF:   #666666;     /* off color */
+    ON:    #00ff00;        /* on color */
+    FGA:   #FC1100;        /* focused text accent */
+    IMG:   #4da6ff;        /* image/icon color */
+    UGT:   #e67e22;        /* urgent color */
 }
 EOF
             ;;
-        "desk1.jpg")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Desk1 Theme */
-* {
-    BG:    #2c2c2cff;
-    BGA:   #F6A192FF;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #4a90e2ff;
-    SEL:   #2c2c2cff;
-    UGT:   #ff6b6bff;
-    IMG:   #4a90e2ff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
-}
-EOF
-            ;;
-        "hehe.png")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Hehe Theme */
-* {
-    BG:    #1a1a1aff;
-    BGA:   #6B8EA9ff;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #6B8EA9ff;
-    SEL:   #ffffffff;
-    UGT:   #ff1493ff;
-    IMG:   #6B8EA9ff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
-}
-EOF
-            ;;
-        "ice.png")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Ice Theme */
-* {
-    BG:    #0f1419ff;
-    BGA:   #87ceebff;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #87ceebff;
-    SEL:   #0f1419ff;
-    UGT:   #4682b4ff;
-    IMG:   #87ceebff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
-}
-EOF
-            ;;
-        "mountain.jpg")
+        "fuji.png")
             cat > "$COLORS_FILE" << 'EOF'
 /* Mountain Theme - Auto-extracted colors */
 * {
-    BG:    #42204Cff;
-    BGA:   #DC907Dff;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #9B7BB8ff;
-    SEL:   #ffffffff;
-    UGT:   #e67e22ff;
-    IMG:   #DC907Dff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
+    BG:    #0c0c1c;        /* background color */
+    BGA:   #3C5483;        /* the selector color */
+    FG:    #ffffff;        /* unselected text color */
+    SEL:   #ffffff;     /* selected text color */
+    BDR:   #B48173;      /* search border color */
+    BG-A:  #B48173;        /* element border color */
+    OFF:   #666666;     /* off color */
+    ON:    #00ff00;     /* on color */
+    FGA:   #ffffff;        /* focused text accent */
+    IMG:   #DC907D;     /* image/icon color */
+    UGT:   #e67e22;     /* urgent color */
 }
 EOF
             ;;
@@ -162,17 +126,17 @@ EOF
             cat > "$COLORS_FILE" << 'EOF'
 /* NSFW Theme */
 * {
-    BG:    #1c1c1ccc;
-    BGA:   #dc143cff;
-    FG:    #ffffffff;
-    FGA:   #ffffffcc;
-    BDR:   #dc143cff;
-    SEL:   #1c1c1cff;
-    UGT:   #ff4500ff;
-    IMG:   #dc143cff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
+    BG:    #1c1c1ccc;     /* background color */
+    BGA:   #dc143cff;     /* the selector color */
+    FG:    #ffffffff;     /* unselected text color */
+    SEL:   #1c1c1cff;     /* selected text color */
+    BDR:   #dc143cff;     /* search border color */
+    BG-A:  #313244;        /* element border color */
+    OFF:   #666666ff;     /* off color */
+    ON:    #00ff00ff;     /* on color */
+    FGA:   #ffffffcc;     /* focused text accent */
+    IMG:   #dc143cff;     /* image/icon color */
+    UGT:   #ff4500ff;     /* urgent color */
 }
 EOF
             ;;
@@ -180,34 +144,17 @@ EOF
             cat > "$COLORS_FILE" << 'EOF'
 /* White Theme */
 * {
-    BG:    #ffdab9cc;
-    BGA:   #333333ff;
-    FG:    #000000ff;
-    FGA:   #333333ff;
-    BDR:   #333333ff;
-    SEL:   #e0e0e0ff;
-    UGT:   #ff6b6bff;
-    IMG:   #333333ff;
-    OFF:   #ccccccff;
-    ON:    #00ff00ff;
-}
-EOF
-            ;;
-        "windblown.jpg")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Windblown Theme - Auto-extracted colors */
-* {
-    BG:    #24304Eff;
-    BGA:   #9E796Bff;
-    FG:    #ffffffff;
-    FGA:   #ffffffff;
-    BDR:   #384566ff;
-    SEL:   #0F151Fff;
-    UGT:   #594C5Eff;
-    IMG:   #9E796Bff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
+    BG:    #ffdab9cc;     /* background color */
+    BGA:   #333333ff;     /* the selector color */
+    FG:    #000000ff;     /* unselected text color */
+    SEL:   #e0e0e0ff;     /* selected text color */
+    BDR:   #333333ff;     /* search border color */
+    BG-A:  #313244;        /* element border color */
+    OFF:   #ccccccff;     /* off color */
+    ON:    #00ff00ff;     /* on color */
+    FGA:   #333333ff;     /* focused text accent */
+    IMG:   #333333ff;     /* image/icon color */
+    UGT:   #ff6b6bff;     /* urgent color */
 }
 EOF
             ;;
@@ -215,35 +162,17 @@ EOF
             cat > "$COLORS_FILE" << 'EOF'
 /* Dark Theme */
 * {
-    BG:    #2a2a2aff;
-    BGA:   #FFDBCCFF;
-    FG:    #ffffffff;
-    FGA:   #000000ff;
-    BDR:   #FDE0D9ff;
-    SEL:   #000000ff;
-    UGT:   #ef4444ff;
-    IMG:   #FDE0D9ff;
-    OFF:   #666666ff;
-    ON:    #00ff00ff;
-    BG-A:  #FDE0D9CC;
-}
-EOF
-            ;;
-        "yourname.jpg")
-            cat > "$COLORS_FILE" << 'EOF'
-/* Your Name Theme */
-* {
-    BG:    #212232;
-    BGA:   #63b4e3;
-    FG:    #FFFFFF;
-    FGA:   #FFFFFF;
-    BDR:   #CBA6F7;
-    SEL:   #FFFFFF;
-    UGT:   #F28FAD;
-    IMG:   #FAE3B0;
-    OFF:   #575268;
-    ON:    #00ff00ff;
-    BG-A:  #313244;
+    BG:    #2a2a2aff;     /* background color */
+    BGA:   #FFDBCCFF;     /* the selector color */
+    FG:    #ffffffff;     /* unselected text color */
+    SEL:   #000000ff;     /* selected text color */
+    BDR:   #FDE0D9ff;     /* search border color */
+    BG-A:  #FDE0D9CC;     /* element border color */
+    OFF:   #666666ff;     /* off color */
+    ON:    #00ff00ff;     /* on color */
+    FGA:   #000000ff;     /* focused text accent */
+    IMG:   #FDE0D9ff;     /* image/icon color */
+    UGT:   #ef4444ff;     /* urgent color */
 }
 EOF
             ;;
@@ -251,17 +180,17 @@ EOF
             cat > "$COLORS_FILE" << 'EOF'
 /* Default Theme */
 * {
-    BG:    #212232;
-    BGA:   #63b4e3;
-    FG:    #FFFFFF;
-    FGA:   #FFFFFF;
-    BDR:   #CBA6F7;
-    SEL:   #FFFFFF;
-    UGT:   #F28FAD;
-    IMG:   #FAE3B0;
-    OFF:   #575268;
-    ON:    #ABE9B3;
-    BG-A:  #313244;
+    BG:    #212232;        /* background color */
+    BGA:   #63b4e3;        /* the selector color */
+    FG:    #FFFFFF;        /* unselected text color */
+    SEL:   #FFFFFF;        /* selected text color */
+    BDR:   #CBA6F7;        /* search border color */
+    BG-A:  #313244;        /* element border color */
+    OFF:   #575268;        /* off color */
+    ON:    #ABE9B3;        /* on color */
+    FGA:   #FFFFFF;        /* focused text accent */
+    IMG:   #FAE3B0;        /* image/icon color */
+    UGT:   #F28FAD;        /* urgent color */
 }
 EOF
             ;;
