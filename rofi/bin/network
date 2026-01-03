@@ -1,50 +1,45 @@
 #!/usr/bin/env bash
+
 rofi_command="rofi -theme $HOME/.config/rofi/config/network.rasi"
 
-# Get info
-IFACE="$(nmcli | grep -i interface | head -n1 | cut -d' ' -f2)"
-STATUS="$(nmcli radio wifi)"
-_SSID="$(iwgetid -r)"
-_LIP="$(nmcli | grep -i server | head -n1 | cut -d' ' -f2)"
-_PIP="$(wget --timeout=30 http://ipinfo.io/ip -qO -)"
+# Fast wifi status
+STATUS="$(nmcli -t -f WIFI g)"
+SSID="$(nmcli -t -f ACTIVE,SSID dev wifi | awk -F: '$1=="yes"{print $2}')"
 
-active=""
-urgent=""
-
-if (ping -c 1 google.com || ping -c 1 github.com) &>/dev/null; then
-	if [[ $STATUS == *"enable"* ]]; then
-        connected="Online"
-        active="-a 0"
-        SSID="$_SSID"
-        PIP="$_PIP"
-	fi
+# Fast connectivity check (nmcli built-in)
+if nmcli -t -f CONNECTIVITY g | grep -q full; then
+    connected="Online"
+    active="-a 0"
+    urgent=""
 else
+    connected="Offline"
+    active=""
     urgent="-u 0"
     SSID="Disconnected"
-    PIP="NA"
-    connected="Offline"
 fi
 
-# Options (no icons)
+# Options
 launch_cli="Open Network Manager (nmtui)"
 launch="Open Connection Editor"
 
 options="$connected\n$launch_cli\n$launch"
 
-# Main
-chosen="$(echo -e "$options" | $rofi_command -p "$SSID : $PIP" -dmenu $active $urgent -selected-row 1)"
+# Show rofi immediately
+chosen="$(printf "%b" "$options" | \
+    $rofi_command -p "$SSID" -dmenu $active $urgent -selected-row 1)"
+
 case $chosen in
-    $connected)
-		if [[ $STATUS == *"enable"* ]]; then
-			nmcli radio wifi off
-		else
-			nmcli radio wifi on
-		fi 
+    "$connected")
+        if [[ "$STATUS" == "enabled" ]]; then
+            nmcli radio wifi off
+        else
+            nmcli radio wifi on
+        fi
         ;;
-    $launch_cli)
+    "$launch_cli")
         kitty -e nmtui
         ;;
-    $launch)
+    "$launch")
         nm-connection-editor
         ;;
 esac
